@@ -1,0 +1,10 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+backend/.env
+backend/node_modules/
+node_modules/
+.DS_Store
+dist/
+coverage/

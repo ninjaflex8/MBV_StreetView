@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuário</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="register-page">
+<div class="register-container">
+    <h2>Cadastro de Usuário</h2>
+    <p>Preencha os campos abaixo para criar sua conta.</p>
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="nome">Nome completo</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome" maxlength="30" required>
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" maxlength="100" required>
+        </div>
+        <div class="form-group">
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" placeholder="No mínimo 6 caracteres" maxlength="50" required>
+        </div>
+        <div class="form-group">
+            <label for="confirmarSenha">Confirmar senha</label>
+            <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" maxlength="50" required>
+        </div>
+        <div class="button-group" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px;">
+            <button id="cadastro_BTN" type="submit">Cadastrar</button>
+            <button id="login_BTN" type="button" style="display:none;" onclick="window.location.href='areadelogin.html'">Ir para login</button>
+        </div>
+        <div class="msg" id="message" role="status" aria-live="polite"></div>
+    </form>
+</div>
+
+<script>
+    const registerForm = document.getElementById('registerForm');
+    const messageBox = document.getElementById('message');
+    const cadastroButton = document.getElementById('cadastro_BTN');
+    const loginButton = document.getElementById('login_BTN');
+
+    function showMessage(text, type = 'error') {
+        messageBox.textContent = text;
+        messageBox.className = `msg ${type}`;
+    }
+
+    registerForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const nome = document.getElementById('nome').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const senha = document.getElementById('senha').value;
+        const confirmarSenha = document.getElementById('confirmarSenha').value;
+
+        if (nome.length < 3) {
+            showMessage('Informe um nome com pelo menos 3 caracteres.');
+            return;
+        }
+
+        if (nome.length > 30) {
+            showMessage('O nome deve ter no máximo 30 caracteres.');
+            return;
+        }
+
+        if (email.length > 100) {
+            showMessage('O e-mail deve ter no máximo 100 caracteres.');
+            return;
+        }
+
+        if (senha.length < 6 || senha.length > 50) {
+            showMessage('A senha deve ter entre 6 e 50 caracteres.');
+            return;
+        }
+
+        if (senha !== confirmarSenha) {
+            showMessage('As senhas não coincidem.');
+            return;
+        }
+
+        cadastroButton.disabled = true;
+        showMessage('Enviando cadastro...', 'success');
+
+        try {
+            const resposta = await fetch('http://localhost:3000/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nome, email, senha })
+            });
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok) {
+                showMessage(resultado.message || 'Não foi possível realizar o cadastro.');
+                return;
+            }
+
+            showMessage('Cadastro realizado com sucesso! Agora entre com seu e-mail e senha.', 'success');
+            cadastroButton.style.display = 'none';
+            loginButton.style.display = 'inline-block';
+            registerForm.reset();
+        } catch (erro) {
+            showMessage('Não foi possível conectar ao servidor. Confira se o backend está rodando.');
+        } finally {
+            cadastroButton.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>
