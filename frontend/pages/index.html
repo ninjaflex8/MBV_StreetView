@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MBV Street View</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="store-page">
+<div class="announcement-bar">
+  <span>MBV STREETVIEW / DROP 01</span>
+  <span>Vista sua identidade. Sem pedir licença.</span>
+  <span>FRETE GRÁTIS ACIMA DE R$ 150</span>
+</div>
+
+<nav class="site-nav" aria-label="Navegação principal">
+  <a class="site-brand" href="index.html" aria-label="MBV StreetView — início">
+    <img src="../imagens/Logo_MBV.png" alt="" class="site-logo">
+    <span class="brand-lockup">
+        <strong>MBV</strong>
+        <small>STREETVIEW</small>
+      </span>
+  </a>
+
+  <div class="nav-links">
+    <a href="#produtos">Shop</a>
+    <a href="#manifesto">Manifesto</a>
+    <a href="#contato">Contato</a>
+  </div>
+
+  <div class="nav-actions">
+    <a id="userButton" class="account-link" href="areadelogin.html">
+      Entrar <span aria-hidden="true">↗</span>
+    </a>
+
+    <a id="logoutButton" class="account-link" href="#" hidden>
+      Sair <span aria-hidden="true">↗</span>
+    </a>
+
+    <button
+            class="cart-trigger"
+            id="openCart"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="cartDrawer"
+    >
+      Sacola <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">
+        <span class="status-dot"></span> STREET CULTURE · DROP 01
+      </p>
+
+      <h1 id="hero-title">
+        Seu estilo.<br>
+        <span>Sua rua.</span><br>
+        Seu código.
+      </h1>
+
+      <p class="hero-description">
+        Peças que falam antes de você. Streetwear para quem constrói
+        a própria identidade, sem seguir o fluxo.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button button-dark" href="#produtos">
+          Explorar o drop <span aria-hidden="true">↘</span>
+        </a>
+        <a class="text-link" href="#manifesto">
+          Conheça a MBV <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div class="hero-meta">
+        <span>01 — 08 / PEÇAS SELECIONADAS</span>
+        <span>FEITO PARA SAIR DO ÓBVIO</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-image-frame">
+        <img
+                src="../imagens/camisa_brooklyn.jpg"
+                alt="Camiseta Brooklyn da coleção MBV StreetView"
+        >
+        <span class="image-index">MBV / 001</span>
+        <span class="image-stamp">STREET<br>UNIFORM</span>
+      </div>
+      <div class="hero-side-note">
+        EXPRESSÃO INDIVIDUAL — DESDE O PRIMEIRO OLHAR
+      </div>
+    </div>
+
+    <div class="hero-watermark" aria-hidden="true">MBV</div>
+  </section>
+
+  <div class="ticker" aria-label="Manifesto da marca">
+    <div class="ticker-track">
+      <span>STREETWEAR WITH INTENTION</span>
+      <i>✳</i>
+      <span>IDENTITY OVER TRENDS</span>
+      <i>✳</i>
+      <span>MADE TO STAND OUT</span>
+      <i>✳</i>
+      <span>STREETWEAR WITH INTENTION</span>
+      <i>✳</i>
+      <span>IDENTITY OVER TRENDS</span>
+      <i>✳</i>
+    </div>
+  </div>
+
+  <section
+          class="shop-section page-shell"
+          id="produtos"
+          aria-labelledby="produtos-titulo"
+  >
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">CURADORIA MBV / 2026</p>
+        <h2 id="produtos-titulo">O drop <span>atual.</span></h2>
+      </div>
+      <p class="section-intro">
+        Escolhas fortes. Silhuetas urbanas.<br>
+        Encontre a peça que combina com seu código.
+      </p>
+    </div>
+
+    <div class="shop-toolbar">
+      <span id="productCount" class="product-count">08 PEÇAS</span>
+
+      <div class="filter-group" role="group" aria-label="Filtrar produtos">
+        <button
+                class="filter-button is-active"
+                data-filter="all"
+                type="button"
+                aria-pressed="true"
+        >Tudo</button>
+
+        <button
+                class="filter-button"
+                data-filter="camisetas"
+                type="button"
+                aria-pressed="false"
+        >Camisetas</button>
+
+        <button
+                class="filter-button"
+                data-filter="acessorios"
+                type="button"
+                aria-pressed="false"
+        >Acessórios</button>
+
+        <button
+                class="filter-button"
+                data-filter="jaquetas"
+                type="button"
+                aria-pressed="false"
+        >Jaquetas</button>
+      </div>
+
+      <label class="sort-control" for="productSort">
+        Ordenar
+        <select id="productSort">
+          <option value="featured">Em destaque</option>
+          <option value="price-asc">Menor preço</option>
+          <option value="price-desc">Maior preço</option>
+          <option value="name">Nome</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="product-grid" aria-label="Produtos da loja">
+      <article
+              class="product-card"
+              data-category="camisetas"
+              data-price="55"
+              data-name="Camiseta Pain"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">MAIS VENDIDO</span>
+          <img src="../imagens/camisa_pain.jpg" alt="Camiseta Pain" loading="lazy">
+          <button class="quick-add" type="button" data-add="pain" aria-label="Adicionar Camiseta Pain à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">CAMISETA / 001</p>
+            <h3>Camiseta Pain</h3>
+          </div>
+          <p class="product-price">R$ 55,00</p>
+        </div>
+        <p class="product-description">
+          Modelagem confortável com estampa exclusiva para looks urbanos.
+        </p>
+        <button class="add-button" type="button" data-add="pain">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+
+      <article
+              class="product-card"
+              data-category="camisetas"
+              data-price="65"
+              data-name="Camiseta do Brooklyn"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">TREND</span>
+          <img src="../imagens/camisa_brooklyn.jpg" alt="Camiseta do Brooklyn" loading="lazy">
+          <button class="quick-add" type="button" data-add="brooklyn" aria-label="Adicionar Camiseta do Brooklyn à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">CAMISETA / 002</p>
+            <h3>Camiseta do Brooklyn</h3>
+          </div>
+          <p class="product-price">R$ 65,00</p>
+        </div>
+        <p class="product-description">
+          Tecido premium, caimento moderno e estampa inspirada na cena de rua.
+        </p>
+        <button class="add-button" type="button" data-add="brooklyn">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+
+      <article
+              class="product-card"
+              data-category="camisetas"
+              data-price="75"
+              data-name="Camiseta Galaxy"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">NOVO</span>
+          <img src="../imagens/camisa_desenho_coasta.jpg" alt="Camiseta Galaxy" loading="lazy">
+          <button class="quick-add" type="button" data-add="galaxy" aria-label="Adicionar Camiseta Galaxy à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">CAMISETA / 003</p>
+            <h3>Camiseta Galaxy</h3>
+          </div>
+          <p class="product-price">R$ 75,00</p>
+        </div>
+        <p class="product-description">
+          Estampa artística exclusiva com acabamento reforçado.
+        </p>
+        <button class="add-button" type="button" data-add="galaxy">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+
+      <article
+              class="product-card"
+              data-category="camisetas"
+              data-price="85"
+              data-name="Camiseta Anjelical"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">EXCLUSIVO</span>
+          <img src="../imagens/camisa_anjo.jpg" alt="Camiseta Anjelical" loading="lazy">
+          <button class="quick-add" type="button" data-add="anjelical" aria-label="Adicionar Camiseta Anjelical à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">CAMISETA / 004</p>
+            <h3>Camiseta Anjelical</h3>
+          </div>
+          <p class="product-price">R$ 85,00</p>
+        </div>
+        <p class="product-description">
+          Peça limitada com detalhes bordados e acabamento premium.
+        </p>
+        <button class="add-button" type="button" data-add="anjelical">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+
+      <article
+              class="product-card"
+              data-category="acessorios"
+              data-price="49"
+              data-name="Boné Street"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">POPULAR</span>
+          <img src="../imagens/bone_street.jpg" alt="Boné Street" loading="lazy">
+          <button class="quick-add" type="button" data-add="bone-street" aria-label="Adicionar Boné Street à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">ACESSÓRIO / 005</p>
+            <h3>Boné Street</h3>
+          </div>
+          <p class="product-price">R$ 49,00</p>
+        </div>
+        <p class="product-description">
+          Boné com aba curva e bordado exclusivo MBV.
+        </p>
+        <button class="add-button" type="button" data-add="bone-street">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+
+      <article
+              class="product-card"
+              data-category="acessorios"
+              data-price="49"
+              data-name="Boné Ossos"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">NOVO</span>
+          <img src="../imagens/bone_bones.jpg" alt="Boné Ossos" loading="lazy">
+          <button class="quick-add" type="button" data-add="bone-ossos" aria-label="Adicionar Boné Ossos à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">ACESSÓRIO / 006</p>
+            <h3>Boné Ossos</h3>
+          </div>
+          <p class="product-price">R$ 49,00</p>
+        </div>
+        <p class="product-description">
+          Boné com aba curva e bordado exclusivo MBV.
+        </p>
+        <button class="add-button" type="button" data-add="bone-ossos">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+
+      <article
+              class="product-card"
+              data-category="jaquetas"
+              data-price="199"
+              data-name="Jaqueta Nike"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">STATEMENT</span>
+          <img src="../imagens/jaqueta_nike.jpg" alt="Jaqueta Nike" loading="lazy">
+          <button class="quick-add" type="button" data-add="jaqueta-nike" aria-label="Adicionar Jaqueta Nike à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">JAQUETA / 007</p>
+            <h3>Jaqueta Nike</h3>
+          </div>
+          <p class="product-price">R$ 199,00</p>
+        </div>
+        <p class="product-description">
+          Jaqueta leve, resistente à água e com design urbano.
+        </p>
+        <button class="add-button" type="button" data-add="jaqueta-nike">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+
+      <article
+              class="product-card"
+              data-category="camisetas"
+              data-price="59"
+              data-name="Camiseta Zoro One Piece"
+      >
+        <div class="product-image-wrap">
+          <span class="product-tag">POPULAR</span>
+          <img src="../imagens/camisa_onepiace.jpg" alt="Camiseta Zoro One Piece" loading="lazy">
+          <button class="quick-add" type="button" data-add="zoro" aria-label="Adicionar Camiseta Zoro One Piece à sacola">+</button>
+        </div>
+        <div class="product-details">
+          <div>
+            <p class="product-category">CAMISETA / 008</p>
+            <h3>Camiseta Zoro One Piece</h3>
+          </div>
+          <p class="product-price">R$ 59,00</p>
+        </div>
+        <p class="product-description">
+          Camiseta confortável com estampa exclusiva de personagem.
+        </p>
+        <button class="add-button" type="button" data-add="zoro">
+          Adicionar à sacola <span>↗</span>
+        </button>
+      </article>
+    </div>
+
+    <p id="emptyProducts" class="empty-products" hidden>
+      Nenhuma peça encontrada nesta categoria.
+    </p>
+  </section>
+
+  <section class="manifesto-section" id="manifesto">
+    <div class="manifesto-mark" aria-hidden="true">M<span>B</span>V</div>
+    <div class="manifesto-copy">
+      <p class="eyebrow">MAIS QUE ROUPA / É POSICIONAMENTO</p>
+      <h2>Não vista o que esperam.<br><span>Vista quem você é.</span></h2>
+      <p>
+        A MBV StreetView nasce da rua, da mistura de referências e da
+        liberdade de construir um estilo próprio. Não é sobre caber numa
+        tendência. É sobre fazer a tendência caber em você.
+      </p>
+      <a href="#produtos" class="manifesto-link">
+        Encontre sua peça <span>↗</span>
+      </a>
+    </div>
+    <span class="manifesto-vertical">IDENTITY IS PERSONAL</span>
+  </section>
+
+  <section class="contact-section page-shell" id="contato">
+    <div class="contact-heading">
+      <p class="eyebrow">FALA COM A GENTE</p>
+      <h2>Conexão direta.<br><span>Sem complicação.</span></h2>
+      <p>Dúvidas sobre as peças ou sobre seu pedido? Nossos canais estão aqui.</p>
+    </div>
+
+    <div class="contact-grid">
+      <a
+              class="contact-link"
+              href="https://www.instagram.com/MBVSTREETVIEW"
+              target="_blank"
+              rel="noreferrer"
+      >
+        <span class="contact-number">01</span>
+        <div>
+          <strong>Instagram</strong>
+          <span>@MBVSTREETVIEW</span>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+
+      <a class="contact-link" href="mailto:contato@mbvstreetview.com">
+        <span class="contact-number">02</span>
+        <div>
+          <strong>E-mail</strong>
+          <span>contato@mbvstreetview.com</span>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+
+      <a
+              class="contact-link"
+              href="https://wa.me/5511999999999"
+              target="_blank"
+              rel="noreferrer"
+      >
+        <span class="contact-number">03</span>
+        <div>
+          <strong>WhatsApp</strong>
+          <span>+55 (11) 99999-9999</span>
+        </div>
+        <span class="contact-arrow">↗</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <a class="footer-brand" href="index.html">
+    <img src="../imagens/Logo_MBV.png" alt="">
+    <span>MBV <small>STREETVIEW</small></span>
+  </a>
+  <p>STREETWEAR WITH INTENTION.</p>
+  <small>© 2026 MBV STREETVIEW — TODOS OS DIREITOS RESERVADOS</small>
+</footer>
+
+<div class="cart-overlay" id="cartOverlay" hidden></div>
+
+<aside
+        class="cart-drawer"
+        id="cartDrawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cartTitle"
+        aria-hidden="true"
+>
+  <div class="cart-header">
+    <div>
+      <p class="eyebrow">SEU SELECIONADO</p>
+      <h2 id="cartTitle">Sua sacola <span id="cartTitleCount">(0)</span></h2>
+    </div>
+    <button
+            class="cart-close"
+            id="closeCart"
+            type="button"
+            aria-label="Fechar sacola"
+    >×</button>
+  </div>
+
+  <div id="cartItems" class="cart-items">
+    <p class="cart-empty">
+      Sua sacola está vazia.<br>
+      <span>O próximo achado pode estar logo ali.</span>
+    </p>
+  </div>
+
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartSubtotal">R$ 0,00</strong>
+    </div>
+
+    <p class="cart-note">
+      Frete grátis acima de R$ 150 conforme a política informada na loja;
+      demais condições e pagamento são confirmados no atendimento.
+      Esta sacola ainda não processa pagamentos.
+    </p>
+
+    <button
+            id="copyOrder"
+            class="button button-dark checkout-button"
+            type="button"
+            disabled
+    >
+      Copiar resumo do pedido <span>↗</span>
+    </button>
+
+    <button id="continueShopping" class="continue-shopping" type="button">
+      Continuar explorando
+    </button>
+
+    <p id="cartFeedback" class="cart-feedback" role="status" aria-live="polite"></p>
+  </div>
+</aside>
+
+<script src="../js/store.js"></script>
+
+<script>
+  (() => {
+    const userButton = document.getElementById("userButton");
+    const logoutButton = document.getElementById("logoutButton");
+
+    function clearSession() {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("rememberedEmail");
+    }
+
+    function showLoggedOut() {
+      userButton.hidden = false;
+      userButton.textContent = "Entrar ↗";
+      userButton.href = "areadelogin.html";
+      logoutButton.hidden = true;
+    }
+
+    function showLoggedIn(name) {
+      userButton.hidden = false;
+      userButton.textContent = "Olá, " + (name || "cliente");
+      userButton.href = "#";
+      logoutButton.hidden = false;
+    }
+
+    logoutButton.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      clearSession();
+      showLoggedOut();
+
+      window.location.href = "areadelogin.html";
+    });
+
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) {
+      showLoggedOut();
+      return;
+    }
+
+    fetch("http://localhost:3000/auth/me", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + authToken
+      }
+    })
+            .then(async (response) => {
+              if (response.status === 401) {
+                clearSession();
+                showLoggedOut();
+                return;
+              }
+
+              if (!response.ok) {
+                showLoggedIn(localStorage.getItem("userName"));
+                return;
+              }
+
+              const data = await response.json();
+
+              const name =
+                      localStorage.getItem("userName") ||
+                      data.usuario?.nome;
+
+              showLoggedIn(name);
+            })
+            .catch(() => {
+              // Se o backend estiver indisponível, o usuário ainda pode sair.
+              showLoggedIn(localStorage.getItem("userName"));
+            });
+  })();
+</script>
+</body>
+</html>
