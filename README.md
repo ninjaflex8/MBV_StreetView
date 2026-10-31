@@ -102,6 +102,31 @@ Todas as rotas abaixo são montadas sob `/auth`.
 
 O cadastro retorna `409` quando o e-mail já está registrado. Erros de validação retornam `400`; credenciais inválidas ou token ausente/inválido retornam `401`.
 
+## Perfis e rotas administrativas
+
+A tabela `usuarios` precisa ter a coluna `perfil`. Para adicionar essa coluna preservando os registros, execute a migração depois de confirmar que a tabela `MBV_Shop.usuarios` existente contém `id`, `nome`, `email` e `senha`:
+
+```powershell
+Get-Content .\backend\database\migrations\001-add-usuario-perfil.sql | mysql -u seu_usuario_mysql -p MBV_Shop
+```
+
+A migração interrompe a execução se a tabela estiver ausente ou se uma coluna `perfil` existente contiver valores diferentes de `cliente` e `admin`. Usuários anteriores e novos cadastros ficam como `cliente` por padrão; o backend ignora qualquer perfil enviado no cadastro.
+
+Promova uma conta existente manualmente: abra `backend/database/migrations/promote-user-to-admin.sql`, substitua o marcador pelo e-mail correto da conta, revise o arquivo e execute-o:
+
+```powershell
+Get-Content .\backend\database\migrations\promote-user-to-admin.sql | mysql -u seu_usuario_mysql -p MBV_Shop
+```
+
+O arquivo não contém e-mail pré-preenchido nem cria rota pública de promoção. A resposta de login inclui `usuario.perfil`. O endpoint `GET /auth/me` consulta e retorna o perfil atual do banco. A rota `GET /admin/teste` exige JWT válido e perfil `admin`; a autorização sempre usa o perfil lido do MySQL, nunca um valor do cliente ou do token.
+
+Execute os testes automatizados do backend com:
+
+```powershell
+cd backend
+npm test
+```
+
 ## Frontend e configuração da API
 
 `frontend/js/config.js` define `window.MBV_API_URL` e cabeçalhos comuns usados pelo login, cadastro e validação da sessão. Para desenvolvimento, configure a URL para o backend local. Para uso público, substitua-a pelo endereço HTTPS de uma API publicada e configure essa API para aceitar requisições do domínio do frontend.
