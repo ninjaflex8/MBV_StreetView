@@ -9,7 +9,8 @@ Loja virtual de streetwear com frontend estático em HTML, CSS e JavaScript, API
 - Cadastro e login de usuários pela API.
 - Senhas armazenadas com bcrypt e autenticação por JWT com validade de duas horas.
 - Consulta de sessão autenticada em `GET /auth/me`.
-- Layout responsivo com identidade visual branca e roxa.
+- Perfis `cliente` e `admin`, com verificação da permissão atual no banco e rota administrativa de teste.
+- Layout responsivo com identidade visual branca e roxa, navegação móvel e melhorias para teclado e leitores de tela.
 
 O catálogo e os preços são definidos no frontend. A sacola ainda não cria pedidos no backend nem processa pagamentos, calcula frete ou reserva estoque.
 
@@ -64,7 +65,7 @@ Os arquivos SQL existentes contêm consultas de exemplo; eles **não criam o ban
    JWT_SECRET=gere_um_segredo_longo_e_aleatorio
    ```
 
-   O backend tem valores padrão locais para `PORT`, host, porta, usuário e banco. Configure todas as variáveis explicitamente para outros ambientes. `JWT_SECRET` é obrigatório para emitir e validar tokens.
+   O backend tem valores padrão locais para `PORT`, host, porta, usuário e banco. Configure todas as variáveis explicitamente para outros ambientes. `JWT_SECRET` é obrigatório para emitir e validar tokens. Não use a conta `root` sem senha em ambientes publicados.
 
 2. Instale as dependências e inicie o backend:
 
@@ -90,14 +91,15 @@ Os arquivos SQL existentes contêm consultas de exemplo; eles **não criam o ban
 
 ## API de autenticação
 
-Todas as rotas abaixo são montadas sob `/auth`.
+As rotas de autenticação são montadas sob `/auth`; as rotas administrativas e de saúde usam os caminhos indicados:
 
 | Método | Rota | Acesso | Descrição |
 |---|---|---|---|
 | `POST` | `/auth/register` | Público | Cadastra usuário com nome de 3 a 30 caracteres, e-mail válido e senha de 6 a 50 caracteres. |
 | `POST` | `/auth/login` | Público | Valida credenciais e retorna um JWT e os dados básicos do usuário. |
-| `GET` | `/auth/me` | JWT obrigatório | Valida o token enviado como `Authorization: Bearer <token>`. |
+| `GET` | `/auth/me` | JWT obrigatório | Retorna os dados básicos e o perfil atualizado da sessão. |
 | `GET` | `/auth/teste` | Público | Rota auxiliar de teste. |
+| `GET` | `/admin/teste` | JWT + perfil `admin` | Rota de validação da autorização administrativa. |
 | `GET` | `/health` | Público | Verifica se o servidor HTTP está ativo. |
 
 O cadastro retorna `409` quando o e-mail já está registrado. Erros de validação retornam `400`; credenciais inválidas ou token ausente/inválido retornam `401`.
@@ -120,7 +122,7 @@ Get-Content .\backend\database\migrations\promote-user-to-admin.sql | mysql -u s
 
 O arquivo não contém e-mail pré-preenchido nem cria rota pública de promoção. A resposta de login inclui `usuario.perfil`. O endpoint `GET /auth/me` consulta e retorna o perfil atual do banco. A rota `GET /admin/teste` exige JWT válido e perfil `admin`; a autorização sempre usa o perfil lido do MySQL, nunca um valor do cliente ou do token.
 
-Execute os testes automatizados do backend com:
+Execute os testes automatizados do backend (perfis, cadastro e validação de autenticação) com:
 
 ```powershell
 cd backend
@@ -134,6 +136,8 @@ npm test
 O endereço ngrok atualmente presente nessa configuração serve apenas para desenvolvimento e depende do túnel e do computador que executa o backend. O cabeçalho `ngrok-skip-browser-warning` existe para contornar a página de aviso do túnel gratuito; remova-o quando não usar ngrok.
 
 O token e os dados básicos da sessão ficam no `localStorage` do navegador. A opção “Lembrar meu e-mail” também usa `localStorage`; não armazena a senha.
+
+Como o token é acessível a JavaScript no navegador, uma vulnerabilidade de XSS pode expor a sessão. O frontend deve continuar evitando HTML dinâmico não confiável; antes de produção, avalie autenticação por cookie `HttpOnly`, `Secure` e `SameSite` junto com as proteções contra CSRF adequadas. O backend usa CORS amplo atualmente e não limita tentativas de login: restrinja as origens aos domínios publicados e implemente limitação de requisições para autenticação antes de disponibilizar a API publicamente.
 
 ## Publicação
 
@@ -150,6 +154,6 @@ O `netlify.toml` define `frontend/` como diretório estático de publicação. O
 - Não há criação de pedidos, pagamento, cálculo de frete ou estoque.
 - Produtos e preços são estáticos no JavaScript e não vêm do MySQL.
 - O schema do banco precisa ser criado/configurado fora dos scripts SQL atuais.
-- Não há testes automatizados definidos nos scripts do `package.json`.
+- Há testes automatizados do backend disponíveis por `npm test`; eles não substituem testes de integração com MySQL nem verificações visuais e de acessibilidade no navegador.
 - A rota `/health` não testa a conexão com o banco.
 - Antes de produção, configure uma URL HTTPS estável para a API, restrinja CORS aos domínios necessários e mantenha segredos apenas nas variáveis de ambiente do servidor.

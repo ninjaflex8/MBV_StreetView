@@ -38,6 +38,9 @@
   const productGrid = document.querySelector(".product-grid");
   const productCount = document.getElementById("productCount");
   const emptyProducts = document.getElementById("emptyProducts");
+  const modalBackground = document.querySelectorAll(".skip-link, .announcement-bar, .site-nav, main, .ticker, .site-footer");
+  let drawerOpener = null;
+  let previousBodyOverflow = "";
 
   function persistCart() {
     try {
@@ -153,19 +156,55 @@
   }
 
   function openDrawer() {
+    if (drawer.classList.contains("is-open")) return;
+    drawerOpener = document.activeElement;
+    previousBodyOverflow = document.body.style.overflow;
     drawer.classList.add("is-open");
     drawer.setAttribute("aria-hidden", "false");
+    drawer.inert = false;
+    document.getElementById("openCart").setAttribute("aria-expanded", "true");
+    modalBackground.forEach(element => { element.inert = true; });
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
     document.getElementById("closeCart").focus();
   }
 
   function closeDrawer() {
+    if (!drawer.classList.contains("is-open")) return;
     drawer.classList.remove("is-open");
     drawer.setAttribute("aria-hidden", "true");
+    drawer.inert = true;
+    document.getElementById("openCart").setAttribute("aria-expanded", "false");
+    modalBackground.forEach(element => { element.inert = false; });
     overlay.hidden = true;
-    document.body.style.overflow = "";
-    document.getElementById("openCart").focus();
+    document.body.style.overflow = previousBodyOverflow;
+    if (drawerOpener instanceof HTMLElement && drawerOpener.isConnected) {
+      drawerOpener.focus();
+    } else {
+      document.getElementById("openCart").focus();
+    }
+    drawerOpener = null;
+  }
+
+  function containDrawerFocus(event) {
+    if (event.key !== "Tab" || !drawer.classList.contains("is-open")) return;
+    const focusable = Array.from(drawer.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(element => !element.hidden);
+    if (!focusable.length) {
+      event.preventDefault();
+      drawer.focus();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || !drawer.contains(document.activeElement))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !drawer.contains(document.activeElement))) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   document.querySelectorAll("[data-add]").forEach(button => {
@@ -177,19 +216,24 @@
   overlay.addEventListener("click", closeDrawer);
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && drawer.classList.contains("is-open")) closeDrawer();
+    containDrawerFocus(event);
   });
 
   function applyFilters() {
     const cards = Array.from(productGrid.querySelectorAll(".product-card"));
     const sort = document.getElementById("productSort").value;
+    cards.forEach((card, index) => {
+      if (card.dataset.originalIndex === undefined) {
+        card.dataset.originalIndex = String(index);
+      }
+    });
     cards.sort((a, b) => {
       if (sort === "price-asc") return Number(a.dataset.price) - Number(b.dataset.price);
       if (sort === "price-desc") return Number(b.dataset.price) - Number(a.dataset.price);
       if (sort === "name") return a.dataset.name.localeCompare(b.dataset.name, "pt-BR");
       return Number(a.dataset.originalIndex) - Number(b.dataset.originalIndex);
     });
-    cards.forEach((card, index) => {
-      if (!card.dataset.originalIndex) card.dataset.originalIndex = String(index);
+    cards.forEach(card => {
       const visible = activeFilter === "all" || card.dataset.category === activeFilter;
       card.hidden = !visible;
       productGrid.append(card);

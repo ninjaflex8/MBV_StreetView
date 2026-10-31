@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MBV Street View</title>
+  <meta name="description" content="Conheça a curadoria MBV StreetView: camisetas, acessórios e moda urbana com identidade própria.">
+  <meta name="theme-color" content="#ffffff">
+  <title>MBV StreetView | Moda urbana</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="store-page">
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 <div class="announcement-bar">
   <span>MBV STREETVIEW / DROP 01</span>
   <span>Vista sua identidade. Sem pedir licença.</span>
@@ -43,6 +46,7 @@
             id="openCart"
             type="button"
             aria-haspopup="dialog"
+            aria-expanded="false"
             aria-controls="cartDrawer"
     >
       Sacola <span class="cart-count" id="cartCount">0</span>
@@ -50,7 +54,7 @@
   </div>
 </nav>
 
-<main>
+<main id="conteudo" tabindex="-1">
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
       <p class="eyebrow">
@@ -100,7 +104,7 @@
     <div class="hero-watermark" aria-hidden="true">MBV</div>
   </section>
 
-  <div class="ticker" aria-label="Manifesto da marca">
+  <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
       <span>STREETWEAR WITH INTENTION</span>
       <i>✳</i>
@@ -132,7 +136,7 @@
     </div>
 
     <div class="shop-toolbar">
-      <span id="productCount" class="product-count">08 PEÇAS</span>
+      <span id="productCount" class="product-count" role="status" aria-live="polite" aria-atomic="true">08 PEÇAS</span>
 
       <div class="filter-group" role="group" aria-label="Filtrar produtos">
         <button
@@ -175,9 +179,10 @@
       </label>
     </div>
 
-    <div class="product-grid" aria-label="Produtos da loja">
+    <div class="product-grid" role="list" aria-label="Produtos da loja">
       <article
               class="product-card"
+              role="listitem"
               data-category="camisetas"
               data-price="55"
               data-name="Camiseta Pain"
@@ -204,6 +209,7 @@
 
       <article
               class="product-card"
+              role="listitem"
               data-category="camisetas"
               data-price="65"
               data-name="Camiseta do Brooklyn"
@@ -230,6 +236,7 @@
 
       <article
               class="product-card"
+              role="listitem"
               data-category="camisetas"
               data-price="75"
               data-name="Camiseta Galaxy"
@@ -256,6 +263,7 @@
 
       <article
               class="product-card"
+              role="listitem"
               data-category="camisetas"
               data-price="85"
               data-name="Camiseta Anjelical"
@@ -282,6 +290,7 @@
 
       <article
               class="product-card"
+              role="listitem"
               data-category="acessorios"
               data-price="49"
               data-name="Boné Street"
@@ -308,6 +317,7 @@
 
       <article
               class="product-card"
+              role="listitem"
               data-category="acessorios"
               data-price="49"
               data-name="Boné Ossos"
@@ -334,6 +344,7 @@
 
       <article
               class="product-card"
+              role="listitem"
               data-category="jaquetas"
               data-price="199"
               data-name="Jaqueta Nike"
@@ -360,6 +371,7 @@
 
       <article
               class="product-card"
+              role="listitem"
               data-category="camisetas"
               data-price="59"
               data-name="Camiseta Zoro One Piece"
@@ -438,19 +450,6 @@
         <span class="contact-arrow">↗</span>
       </a>
 
-      <a
-              class="contact-link"
-              href="https://wa.me/5511999999999"
-              target="_blank"
-              rel="noreferrer"
-      >
-        <span class="contact-number">03</span>
-        <div>
-          <strong>WhatsApp</strong>
-          <span>+55 (11) 99999-9999</span>
-        </div>
-        <span class="contact-arrow">↗</span>
-      </a>
     </div>
   </section>
 </main>
@@ -473,6 +472,7 @@
         aria-modal="true"
         aria-labelledby="cartTitle"
         aria-hidden="true"
+        inert
 >
   <div class="cart-header">
     <div>

@@ -1,39 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuário</title>
+    <meta name="description" content="Crie sua conta MBV StreetView.">
+    <title>Criar conta | MBV StreetView</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="register-page">
-<div class="register-container">
-    <h2>Cadastro de Usuário</h2>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<main class="register-container" id="conteudo" tabindex="-1">
+    <h1>Criar conta</h1>
     <p>Preencha os campos abaixo para criar sua conta.</p>
-    <form id="registerForm">
+    <form id="registerForm" autocomplete="on">
         <div class="form-group">
             <label for="nome">Nome completo</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome" maxlength="30" required>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome" maxlength="30" autocomplete="name" required>
         </div>
         <div class="form-group">
             <label for="email">E-mail</label>
-            <input type="email" id="email" name="email" placeholder="seu@email.com" maxlength="100" required>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" maxlength="100" autocomplete="email" required>
         </div>
         <div class="form-group">
             <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="No mínimo 6 caracteres" maxlength="50" required>
+            <input type="password" id="senha" name="senha" placeholder="No mínimo 6 caracteres" minlength="6" maxlength="50" autocomplete="new-password" aria-describedby="senhaHint" required>
+            <p class="field-hint" id="senhaHint">Use de 6 a 50 caracteres.</p>
         </div>
         <div class="form-group">
             <label for="confirmarSenha">Confirmar senha</label>
-            <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" maxlength="50" required>
+            <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" minlength="6" maxlength="50" autocomplete="new-password" required>
         </div>
         <div class="button-group" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px;">
             <button id="cadastro_BTN" type="submit">Cadastrar</button>
-            <button id="login_BTN" type="button" style="display:none;" onclick="window.location.href='areadelogin.html'">Ir para login</button>
+            <button id="login_BTN" type="button" hidden onclick="window.location.href='areadelogin.html'">Ir para login</button>
         </div>
         <div class="msg" id="message" role="status" aria-live="polite"></div>
     </form>
-</div>
+</main>
 
 <script src="../js/config.js"></script>
 <script>
@@ -101,9 +104,10 @@
             }
 
             showMessage('Cadastro realizado com sucesso! Agora entre com seu e-mail e senha.', 'success');
-            cadastroButton.style.display = 'none';
-            loginButton.style.display = 'inline-block';
+            cadastroButton.hidden = true;
+            loginButton.hidden = false;
             registerForm.reset();
+            loginButton.focus();
         } catch (erro) {
             showMessage('Não foi possível conectar ao servidor. Confira se o backend está rodando.');
         } finally {
