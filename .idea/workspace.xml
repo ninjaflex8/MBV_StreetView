@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="Add sample hook scripts for Git hooks" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="module" />
+      <option value="repository" />
+    </option>
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/Marcos/Downloads/MBV_StreetView" value="3LLYVvbO1P0SCJ5wHcLTiA8drv4" />
+      <entry key="_C:/Users/Marcos/OneDrive/Documentos/MBV_StreetView" value="3LSuJoKRUm18wpvWtgFau2HDLWC" />
+    </persistenceIdMap>
+  </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="e90f0d04-5bf7-4e43-8545-30ddb4d7ad06" value="" />
+    </colors>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="70" />
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;assignee&quot;: &quot;ninjaflex8&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {}
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ninjaflex8/MBV_StreetView.git&quot;,
+    &quot;accountId&quot;: &quot;977e1603-d524-40b1-bc6a-1bff733e07de&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="0.003023663621309451" />
+      <entry key="MS500" value="0.4956700751369308" />
+      <entry key="S2" value="3.3845268301893405" />
+      <entry key="S5" value="5.6009174056256485" />
+      <entry key="S10" value="6.680627432084142" />
+      <entry key="S30" value="7.530315709707587" />
+      <entry key="S60" value="7.7689465831018705" />
+      <entry key="M2" value="8.179929882483341" />
+      <entry key="M5" value="10.937102512504767" />
+      <entry key="M10" value="15.420539413779322" />
+      <entry key="M15" value="19.027369166212562" />
+      <entry key="M30" value="30.254767498670866" />
+      <entry key="H1" value="53.28391114777597" />
+      <entry key="H2" value="83.6058344631452" />
+      <entry key="H4" value="111.55569726395323" />
+      <entry key="D1" value="148.36337481436442" />
+      <entry key="W1" value="156.56530729877457" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.000000162303971" />
+      <entry key="S60" value="1.0004673007858318" />
+      <entry key="M2" value="1.0283624606496062" />
+      <entry key="M5" value="1.3830150723323926" />
+      <entry key="M10" value="2.0720810446709557" />
+      <entry key="M15" value="2.610946765984478" />
+      <entry key="M30" value="3.7528091773568883" />
+      <entry key="H1" value="5.330888785929275" />
+      <entry key="H2" value="7.1074918624412735" />
+      <entry key="H4" value="8.623890068098326" />
+      <entry key="D1" value="10.517844097354207" />
+      <entry key="W1" value="10.928513945862589" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.22217761688141188" />
+      <entry key="MS500" value="1.1895063504729915" />
+      <entry key="S2" value="4.2684346354893385" />
+      <entry key="S5" value="6.546009667381418" />
+      <entry key="S10" value="7.651242395488005" />
+      <entry key="S30" value="8.520026510608966" />
+      <entry key="S60" value="8.764191375850137" />
+      <entry key="M2" value="9.205312619635976" />
+      <entry key="M5" value="12.317139902544499" />
+      <entry key="M10" value="17.489553866140394" />
+      <entry key="M15" value="21.635509944119512" />
+      <entry key="M30" value="34.005345112661416" />
+      <entry key="H1" value="58.61303144264565" />
+      <entry key="H2" value="90.71202809618968" />
+      <entry key="H4" value="120.178744320307" />
+      <entry key="D1" value="158.88103491728623" />
+      <entry key="W1" value="167.4937935572326" />
+    </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3LFXyzdfmz8t2ozKEGM2ojLHzAi" />
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="ensembleEnabled" value="false" />
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+        <option name="worktreeMode" value="WORKSPACE" />
+      </template>
+    </option>
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Git.Working.Tree.Tab.closed.by.user": "closed",
+    "JavaScript Debug.index.html.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Marcos/OneDrive/Documentos/MBV_StreetView",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Users\\Marcos\\AppData\\Roaming\\JetBrains\\IntelliJIdea2026.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Marcos\OneDrive\Documentos\MBV_StreetView" />
+      <recent name="C:\Users\Marcos\Downloads\MBV_StreetView" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" engineId="37cae5b9-e8b2-4949-9172-aafa37fbc09c" uri="http://localhost:63342/MBV_StreetView/MBV_Store-main/frontend/pages/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.index.html" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10968.63" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="" />
+      <created>1793051047372</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1793051047372</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="598b852a-5411-40ef-8f1f-fcacf1888d22" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="598b852a-5411-40ef-8f1f-fcacf1888d22">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Nova versão de desing" />
+    <MESSAGE value="Configura publicação pelo GitHub Pages" />
+    <MESSAGE value="Organiza estrutura do projeto e integra frontend com API&#10;&#10;Consolida frontend e backend na raiz, define uma única página principal&#10;e centraliza os endpoints de autenticação no frontend. Ajusta o túnel&#10;ngrok para encaminhar à API local na porta 3000." />
+    <MESSAGE value="Adiciona workflows para publicação no GitHub Pages e análise de qualidade com Qodana" />
+    <MESSAGE value="Add sample hook scripts for Git hooks" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add sample hook scripts for Git hooks" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
