@@ -22,9 +22,9 @@ exports.register = async (req, res) => {
   const nomeLimpo = nome.trim();
   const emailLimpo = email.trim().toLowerCase();
 
-  if (!nomeLimpo || nomeLimpo.length > 30) {
+  if (nomeLimpo.length < 3 || nomeLimpo.length > 30) {
    return res.status(400).json({
-    message: "O nome deve ter entre 1 e 30 caracteres."
+    message: "O nome deve ter entre 3 e 30 caracteres."
    });
   }
 
@@ -38,9 +38,9 @@ exports.register = async (req, res) => {
    });
   }
 
-  if (!senha || senha.length > 50) {
+  if (senha.length < 6 || senha.length > 50) {
    return res.status(400).json({
-    message: "A senha deve ter entre 1 e 50 caracteres."
+    message: "A senha deve ter entre 6 e 50 caracteres."
    });
   }
 

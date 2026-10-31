@@ -3,12 +3,13 @@ async function login(){
  const email = document.getElementById("email").value
  const senha = document.getElementById("senha").value
 
- const resposta = await fetch("http://localhost:3000/auth/login",{
+ const resposta = await fetch(`${window.MBV_API_URL}/auth/login`,{
 
   method:"POST",
 
   headers:{
-   "Content-Type":"application/json"
+   "Content-Type":"application/json",
+   ...window.MBV_API_HEADERS
   },
 
   body: JSON.stringify({
