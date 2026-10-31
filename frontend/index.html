@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MBV Street View</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="store-page">
@@ -16,7 +16,7 @@
 
 <nav class="site-nav" aria-label="Navegação principal">
   <a class="site-brand" href="index.html" aria-label="MBV StreetView — início">
-    <img src="../imagens/Logo_MBV.png" alt="" class="site-logo">
+    <img src="imagens/Logo_MBV.png" alt="" class="site-logo">
     <span class="brand-lockup">
         <strong>MBV</strong>
         <small>STREETVIEW</small>
@@ -30,7 +30,7 @@
   </div>
 
   <div class="nav-actions">
-    <a id="userButton" class="account-link" href="areadelogin.html">
+    <a id="userButton" class="account-link" href="pages/areadelogin.html">
       Entrar <span aria-hidden="true">↗</span>
     </a>
 
@@ -86,7 +86,7 @@
     <div class="hero-visual">
       <div class="hero-image-frame">
         <img
-                src="../imagens/camisa_brooklyn.jpg"
+                src="imagens/camisa_brooklyn.jpg"
                 alt="Camiseta Brooklyn da coleção MBV StreetView"
         >
         <span class="image-index">MBV / 001</span>
@@ -184,7 +184,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">MAIS VENDIDO</span>
-          <img src="../imagens/camisa_pain.jpg" alt="Camiseta Pain" loading="lazy">
+          <img src="imagens/camisa_pain.jpg" alt="Camiseta Pain" loading="lazy">
           <button class="quick-add" type="button" data-add="pain" aria-label="Adicionar Camiseta Pain à sacola">+</button>
         </div>
         <div class="product-details">
@@ -210,7 +210,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">TREND</span>
-          <img src="../imagens/camisa_brooklyn.jpg" alt="Camiseta do Brooklyn" loading="lazy">
+          <img src="imagens/camisa_brooklyn.jpg" alt="Camiseta do Brooklyn" loading="lazy">
           <button class="quick-add" type="button" data-add="brooklyn" aria-label="Adicionar Camiseta do Brooklyn à sacola">+</button>
         </div>
         <div class="product-details">
@@ -236,7 +236,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">NOVO</span>
-          <img src="../imagens/camisa_desenho_coasta.jpg" alt="Camiseta Galaxy" loading="lazy">
+          <img src="imagens/camisa_desenho_coasta.jpg" alt="Camiseta Galaxy" loading="lazy">
           <button class="quick-add" type="button" data-add="galaxy" aria-label="Adicionar Camiseta Galaxy à sacola">+</button>
         </div>
         <div class="product-details">
@@ -262,7 +262,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">EXCLUSIVO</span>
-          <img src="../imagens/camisa_anjo.jpg" alt="Camiseta Anjelical" loading="lazy">
+          <img src="imagens/camisa_anjo.jpg" alt="Camiseta Anjelical" loading="lazy">
           <button class="quick-add" type="button" data-add="anjelical" aria-label="Adicionar Camiseta Anjelical à sacola">+</button>
         </div>
         <div class="product-details">
@@ -288,7 +288,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">POPULAR</span>
-          <img src="../imagens/bone_street.jpg" alt="Boné Street" loading="lazy">
+          <img src="imagens/bone_street.jpg" alt="Boné Street" loading="lazy">
           <button class="quick-add" type="button" data-add="bone-street" aria-label="Adicionar Boné Street à sacola">+</button>
         </div>
         <div class="product-details">
@@ -314,7 +314,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">NOVO</span>
-          <img src="../imagens/bone_bones.jpg" alt="Boné Ossos" loading="lazy">
+          <img src="imagens/bone_bones.jpg" alt="Boné Ossos" loading="lazy">
           <button class="quick-add" type="button" data-add="bone-ossos" aria-label="Adicionar Boné Ossos à sacola">+</button>
         </div>
         <div class="product-details">
@@ -340,7 +340,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">STATEMENT</span>
-          <img src="../imagens/jaqueta_nike.jpg" alt="Jaqueta Nike" loading="lazy">
+          <img src="imagens/jaqueta_nike.jpg" alt="Jaqueta Nike" loading="lazy">
           <button class="quick-add" type="button" data-add="jaqueta-nike" aria-label="Adicionar Jaqueta Nike à sacola">+</button>
         </div>
         <div class="product-details">
@@ -366,7 +366,7 @@
       >
         <div class="product-image-wrap">
           <span class="product-tag">POPULAR</span>
-          <img src="../imagens/camisa_onepiace.jpg" alt="Camiseta Zoro One Piece" loading="lazy">
+          <img src="imagens/camisa_onepiace.jpg" alt="Camiseta Zoro One Piece" loading="lazy">
           <button class="quick-add" type="button" data-add="zoro" aria-label="Adicionar Camiseta Zoro One Piece à sacola">+</button>
         </div>
         <div class="product-details">
@@ -457,7 +457,7 @@
 
 <footer class="site-footer">
   <a class="footer-brand" href="index.html">
-    <img src="../imagens/Logo_MBV.png" alt="">
+    <img src="imagens/Logo_MBV.png" alt="">
     <span>MBV <small>STREETVIEW</small></span>
   </a>
   <p>STREETWEAR WITH INTENTION.</p>
@@ -523,7 +523,8 @@
   </div>
 </aside>
 
-<script src="../js/store.js"></script>
+<script src="js/config.js"></script>
+<script src="js/store.js"></script>
 
 <script>
   (() => {
@@ -540,7 +541,7 @@
     function showLoggedOut() {
       userButton.hidden = false;
       userButton.textContent = "Entrar ↗";
-      userButton.href = "areadelogin.html";
+      userButton.href = "pages/areadelogin.html";
       logoutButton.hidden = true;
     }
 
@@ -557,7 +558,7 @@
       clearSession();
       showLoggedOut();
 
-      window.location.href = "areadelogin.html";
+      window.location.href = "pages/areadelogin.html";
     });
 
     const authToken = localStorage.getItem("authToken");
@@ -567,10 +568,11 @@
       return;
     }
 
-    fetch("http://localhost:3000/auth/me", {
+    fetch(`${window.MBV_API_URL}/auth/me`, {
       method: "GET",
       headers: {
-        Authorization: "Bearer " + authToken
+        Authorization: "Bearer " + authToken,
+        ...window.MBV_API_HEADERS
       }
     })
             .then(async (response) => {

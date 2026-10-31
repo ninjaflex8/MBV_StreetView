@@ -35,6 +35,7 @@
     </form>
 </div>
 
+<script src="../js/config.js"></script>
 <script>
     const registerForm = document.getElementById('registerForm');
     const messageBox = document.getElementById('message');
@@ -83,10 +84,11 @@
         showMessage('Enviando cadastro...', 'success');
 
         try {
-            const resposta = await fetch('http://localhost:3000/auth/register', {
+            const resposta = await fetch(`${window.MBV_API_URL}/auth/register`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    ...window.MBV_API_HEADERS
                 },
                 body: JSON.stringify({ nome, email, senha })
             });
