@@ -55,28 +55,6 @@
   const catalogFeedback = document.getElementById("catalogFeedback");
   const mobileMenuToggle = document.getElementById("mobileMenuToggle");
   const navLinks = document.getElementById("mainNavLinks");
-  const carouselImage = document.getElementById("heroCarouselImage");
-  const carouselCount = document.getElementById("heroCarouselCount");
-  const carouselStatus = document.getElementById("heroCarouselStatus");
-  const carouselFrame = document.getElementById("heroCarousel");
-  const carouselToggle = document.getElementById("heroCarouselToggle");
-  const carouselProgress = document.getElementById("heroCarouselProgress");
-  const carouselProgressBar = document.querySelector(".carousel-progress");
-  const carouselDuration = 5000;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const carouselSlides = [
-    { src: "imagens/camisa_brooklyn.jpg", alt: "Camiseta Brooklyn da coleção MBV StreetView" },
-    { src: "imagens/camisa_pain.jpg", alt: "Camiseta Pain da coleção MBV StreetView" },
-    { src: "imagens/camisa_desenho_coasta.jpg", alt: "Camiseta Galaxy da coleção MBV StreetView" },
-    { src: "imagens/jaqueta_nike.jpg", alt: "Jaqueta da coleção MBV StreetView" }
-  ];
-  let carouselIndex = 0;
-  let carouselTimer = null;
-  let progressTimer = null;
-  let carouselStartedAt = 0;
-  let carouselRemaining = carouselDuration;
-  let carouselManuallyPaused = reducedMotion.matches;
-  let carouselFocusPaused = false;
   let returnFocusTarget = null;
   let toastTimer = null;
   let toastHideTimer = null;
@@ -312,111 +290,6 @@
     } else {
       document.getElementById("openCart").focus();
     }
-  }
-
-  function showCarouselSlide(index, announce = true) {
-    carouselIndex = (index + carouselSlides.length) % carouselSlides.length;
-    const slide = carouselSlides[carouselIndex];
-    carouselImage.src = slide.src;
-    carouselImage.alt = slide.alt;
-    carouselCount.textContent = `MBV / ${String(carouselIndex + 1).padStart(3, "0")}`;
-    if (announce) {
-      carouselStatus.textContent = `Imagem ${carouselIndex + 1} de ${carouselSlides.length}: ${slide.alt}`;
-    }
-  }
-
-  function updateCarouselProgress() {
-    const elapsed = carouselDuration - carouselRemaining;
-    const progress = Math.min(100, Math.round((elapsed / carouselDuration) * 100));
-    carouselProgress.style.width = `${progress}%`;
-    carouselProgressBar.setAttribute("aria-valuenow", String(progress));
-  }
-
-  function stopCarouselTimer() {
-    if (carouselTimer) window.clearTimeout(carouselTimer);
-    if (progressTimer) window.clearInterval(progressTimer);
-    carouselTimer = null;
-    progressTimer = null;
-    if (carouselStartedAt) {
-      carouselRemaining = Math.max(0, carouselRemaining - (Date.now() - carouselStartedAt));
-      carouselStartedAt = 0;
-    }
-    updateCarouselProgress();
-  }
-
-  function startCarouselTimer() {
-    if (carouselManuallyPaused || document.hidden || carouselFrame.matches(":hover, :focus-within") || carouselTimer) return;
-    carouselStartedAt = Date.now();
-    carouselTimer = window.setTimeout(() => {
-      carouselTimer = null;
-      carouselStartedAt = 0;
-      carouselRemaining = carouselDuration;
-      showCarouselSlide(carouselIndex + 1, false);
-      updateCarouselProgress();
-      startCarouselTimer();
-    }, carouselRemaining);
-    progressTimer = window.setInterval(() => {
-      carouselRemaining = Math.max(0, carouselDuration - (Date.now() - carouselStartedAt));
-      updateCarouselProgress();
-    }, 100);
-  }
-
-  function restartCarouselTimer() {
-    stopCarouselTimer();
-    carouselRemaining = carouselDuration;
-    updateCarouselProgress();
-    startCarouselTimer();
-  }
-
-  function updateCarouselToggle() {
-    const paused = carouselManuallyPaused || carouselFocusPaused || document.hidden || carouselFrame.matches(":hover");
-    carouselToggle.textContent = paused ? "▶" : "Ⅱ";
-    carouselToggle.setAttribute("aria-label", paused ? "Iniciar carrossel" : "Pausar carrossel");
-  }
-
-  function refreshCarouselTimer() {
-    updateCarouselToggle();
-    if (carouselManuallyPaused || carouselFocusPaused || document.hidden || carouselFrame.matches(":hover")) {
-      stopCarouselTimer();
-    } else {
-      startCarouselTimer();
-    }
-  }
-
-  if (
-      carouselImage && carouselCount && carouselStatus && carouselFrame &&
-      carouselToggle && carouselProgress && carouselProgressBar
-  ) {
-    document.getElementById("heroCarouselPrevious").addEventListener("click", () => {
-      showCarouselSlide(carouselIndex - 1);
-      restartCarouselTimer();
-    });
-    document.getElementById("heroCarouselNext").addEventListener("click", () => {
-      showCarouselSlide(carouselIndex + 1);
-      restartCarouselTimer();
-    });
-    carouselToggle.addEventListener("click", () => {
-      carouselManuallyPaused = !carouselManuallyPaused;
-      if (!carouselManuallyPaused) carouselFocusPaused = false;
-      refreshCarouselTimer();
-    });
-    carouselFrame.addEventListener("mouseenter", refreshCarouselTimer);
-    carouselFrame.addEventListener("mouseleave", refreshCarouselTimer);
-    carouselFrame.addEventListener("focusin", () => {
-      carouselFocusPaused = true;
-      refreshCarouselTimer();
-    });
-    carouselFrame.addEventListener("focusout", event => {
-      if (!carouselFrame.contains(event.relatedTarget)) {
-        carouselFocusPaused = false;
-        refreshCarouselTimer();
-      }
-    });
-    document.addEventListener("visibilitychange", refreshCarouselTimer);
-    reducedMotion.addEventListener("change", event => {
-      if (event.matches) carouselManuallyPaused = true;
-      refreshCarouselTimer();
-    });
   }
 
   function closeMobileMenu() {
@@ -793,13 +666,5 @@
 
   renderCart();
   applyFilters();
-  if (
-      carouselImage && carouselCount && carouselStatus && carouselFrame &&
-      carouselToggle && carouselProgress && carouselProgressBar
-  ) {
-    showCarouselSlide(0);
-    updateCarouselProgress();
-    refreshCarouselTimer();
-  }
   loadCatalog();
 })();

@@ -1,7 +1,7 @@
 USE MBV_Shop;
 
--- Substitua pelo e-mail da conta existente que deve ser promovida.
-SET @email_admin = 'SUBSTITUA_PELO_EMAIL_DO_PROPRIETARIO';
+-- Promove a conta existente do proprietário; o cadastro público segue criando clientes.
+SET @email_admin = 'marcosepifanio13@gmail.com';
 
 UPDATE usuarios
 SET perfil = 'admin'

@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#F5F3EE">
   <meta name="description" content="Consulte seus pedidos da MBV StreetView.">
   <title>Meus pedidos | MBV StreetView</title>
+  <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="admin-page">
@@ -17,25 +18,16 @@
     </a>
     <a class="account-link" href="../index.html">Voltar à loja ↗</a>
   </header>
-  <main id="ordersContent" class="admin-layout">
-    <section class="page-carousel admin-page-carousel" data-carousel data-image-base="../imagens/" role="region" aria-roledescription="carrossel" aria-label="Destaques da coleção MBV">
-      <div class="page-carousel-frame">
-        <img data-carousel-image src="../imagens/camisa_brooklyn.jpg" alt="Camiseta Brooklyn da coleção MBV StreetView">
-        <span class="page-carousel-count" data-carousel-count aria-hidden="true">MBV / 001</span>
-        <button class="carousel-control carousel-previous" data-carousel-previous type="button" aria-label="Ver imagem anterior do destaque">‹</button>
-        <button class="carousel-control carousel-next" data-carousel-next type="button" aria-label="Ver próxima imagem do destaque">›</button>
-        <button class="carousel-toggle" data-carousel-toggle type="button" aria-label="Pausar carrossel">Ⅱ</button>
-        <div class="page-carousel-progress" data-carousel-progress role="progressbar" aria-label="Tempo até a próxima imagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
-      </div>
-      <p class="visually-hidden" data-carousel-status role="status" aria-live="polite" aria-atomic="true"></p>
+  <main id="ordersContent" class="admin-layout orders-layout">
+    <section class="orders-panel" aria-labelledby="ordersTitle">
+      <p class="eyebrow">SUA CONTA / PEDIDOS</p>
+      <h1 id="ordersTitle" class="orders-page-title">Meus <span>pedidos.</span></h1>
+      <p class="orders-intro">Acompanhe por aqui o status e os itens dos seus pedidos.</p>
+      <p id="ordersMessage" class="admin-message" role="status" aria-live="polite">Validando sua sessão…</p>
+      <div id="customerOrders" class="admin-list"></div>
     </section>
-    <p class="eyebrow">SUA CONTA / PEDIDOS</p>
-    <h1 class="orders-page-title">Meus <span>pedidos.</span></h1>
-    <p id="ordersMessage" class="admin-message" role="status" aria-live="polite">Validando sua sessão…</p>
-    <div id="customerOrders" class="admin-list"></div>
   </main>
   <script src="../js/config.js"></script>
-  <script src="../js/carousel.js"></script>
   <script src="../js/orders.js"></script>
 </body>
 </html>

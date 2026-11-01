@@ -7,11 +7,17 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="refactor: improve login and registration pages, enhance filter functionality, and update styles">
+    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="fix: corrigir estoque, sacola e painel administrativo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/database/migrations/promote-user-to-admin.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/database/migrations/promote-user-to-admin.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/carousel.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/carousel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/js/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/areadelogin.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/areadelogin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/paginaderegistro.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/paginaderegistro.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/pedidos.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/pedidos.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +64,24 @@
   ],
   &quot;lastFilter&quot;: {}
 }</component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDOVbIZ6s8AAAABL_xeRw",
+        "number": 1
+      },
+      "lastSeen": 1793570913734
+    },
+    {
+      "id": {
+        "id": "PR_kwDOVbIZ6s8AAAABL_5Q7Q",
+        "number": 2
+      },
+      "lastSeen": 1793570920852
+    }
+  ]
+}]]></component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/ninjaflex8/MBV_StreetView.git&quot;,
@@ -274,7 +298,8 @@
     <MESSAGE value="Adiciona documentação sobre GitHub Copilot e cria novo arquivo SQL para consulta de usuários" />
     <MESSAGE value="refactor: update configuration and improve API integration" />
     <MESSAGE value="refactor: improve login and registration pages, enhance filter functionality, and update styles" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: improve login and registration pages, enhance filter functionality, and update styles" />
+    <MESSAGE value="fix: corrigir estoque, sacola e painel administrativo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: corrigir estoque, sacola e painel administrativo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

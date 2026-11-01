@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#F5F3EE">
   <meta name="description" content="Painel administrativo da MBV StreetView.">
   <title>Painel administrativo | MBV StreetView</title>
+  <script src="../js/theme.js"></script>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="admin-page">
@@ -22,21 +23,11 @@
   </header>
 
   <main id="adminContent" class="admin-layout" hidden>
-    <section class="page-carousel admin-page-carousel" data-carousel data-image-base="../imagens/" role="region" aria-roledescription="carrossel" aria-label="Destaques da coleção MBV">
-      <div class="page-carousel-frame">
-        <img data-carousel-image src="../imagens/camisa_brooklyn.jpg" alt="Camiseta Brooklyn da coleção MBV StreetView">
-        <span class="page-carousel-count" data-carousel-count aria-hidden="true">MBV / 001</span>
-        <button class="carousel-control carousel-previous" data-carousel-previous type="button" aria-label="Ver imagem anterior do destaque">‹</button>
-        <button class="carousel-control carousel-next" data-carousel-next type="button" aria-label="Ver próxima imagem do destaque">›</button>
-        <div class="page-carousel-progress" data-carousel-progress role="progressbar" aria-label="Tempo até a próxima imagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
-      </div>
-      <p class="visually-hidden" data-carousel-status role="status" aria-live="polite" aria-atomic="true"></p>
-    </section>
     <div class="admin-shell">
       <aside class="admin-sidebar" aria-label="Navegação administrativa">
         <div class="admin-title">
           <p class="eyebrow">GESTÃO MBV / ÁREA RESTRITA</p>
-          <h1>Painel <span>administrativo.</span></h1>
+          <h1>Painel <span>admin.</span></h1>
           <p>Gerencie catálogo, categorias, estoque e pedidos.</p>
         </div>
         <nav class="admin-tabs" aria-label="Seções administrativas">
@@ -54,6 +45,7 @@
 
         <section class="admin-section" id="section-dashboard" aria-labelledby="dashboardTitle">
           <h2 id="dashboardTitle">Resumo da loja</h2>
+          <p class="admin-section-intro">Acompanhe o catálogo, a disponibilidade e os pedidos em um só lugar.</p>
           <div id="dashboardMetrics" class="dashboard-metrics" aria-live="polite"></div>
           <h3>Movimentações recentes</h3>
           <div id="dashboardMovements" class="admin-table-wrap"></div>
@@ -126,7 +118,6 @@
     <a class="button button-dark" href="../index.html">Voltar à loja</a>
   </main>
   <script src="../js/config.js"></script>
-  <script src="../js/carousel.js"></script>
   <script src="../js/admin.js"></script>
 </body>
 </html>

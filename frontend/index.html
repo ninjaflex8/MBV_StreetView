@@ -6,6 +6,7 @@
   <meta name="description" content="Conheça a curadoria MBV StreetView: camisetas, acessórios e moda urbana com identidade própria.">
   <meta name="theme-color" content="#F5F3EE">
   <title>MBV StreetView | Moda urbana</title>
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -101,38 +102,28 @@
     </div>
 
     <div class="hero-visual">
-      <div class="hero-image-frame" id="heroCarousel" role="region" aria-roledescription="carrossel" aria-label="Destaques da coleção MBV">
+      <div class="hero-image-frame" id="heroCarousel" data-carousel data-image-base="imagens/" role="region" aria-roledescription="carrossel" aria-label="Destaques da coleção MBV">
         <img
-                id="heroCarouselImage"
+                data-carousel-image
                 src="imagens/camisa_brooklyn.jpg"
                 alt="Camiseta Brooklyn da coleção MBV StreetView"
         >
-        <span class="image-index" id="heroCarouselCount" aria-hidden="true">MBV / 001</span>
+        <span class="image-index" data-carousel-count aria-hidden="true">MBV / 001</span>
         <span class="image-stamp">STREET<br>UNIFORM</span>
-        <button class="carousel-control carousel-previous" id="heroCarouselPrevious" type="button" aria-label="Ver imagem anterior do destaque">‹</button>
-        <button class="carousel-control carousel-next" id="heroCarouselNext" type="button" aria-label="Ver próxima imagem do destaque">›</button>
-        <button class="carousel-toggle" id="heroCarouselToggle" type="button" aria-label="Pausar carrossel">Ⅱ</button>
-        <div class="carousel-progress" id="heroCarouselProgress" role="progressbar" aria-label="Tempo até a próxima imagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+        <button class="carousel-control carousel-previous" data-carousel-previous type="button" aria-label="Ver imagem anterior do destaque">‹</button>
+        <button class="carousel-control carousel-next" data-carousel-next type="button" aria-label="Ver próxima imagem do destaque">›</button>
+        <div class="carousel-progress" data-carousel-progress role="progressbar" aria-label="Tempo até a próxima imagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
       </div>
-      <p class="visually-hidden" id="heroCarouselStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p class="visually-hidden" data-carousel-status role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="hero-side-note">
         EXPRESSÃO INDIVIDUAL — DESDE O PRIMEIRO OLHAR
       </div>
     </div>
 
-    <div class="hero-watermark" aria-hidden="true">MBV</div>
   </section>
 
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <div class="ticker-group">
-        <span>STREETWEAR WITH INTENTION</span>
-        <i>✳</i>
-        <span>IDENTITY OVER TRENDS</span>
-        <i>✳</i>
-        <span>MADE TO STAND OUT</span>
-        <i>✳</i>
-      </div>
       <div class="ticker-group">
         <span>STREETWEAR WITH INTENTION</span>
         <i>✳</i>
@@ -553,6 +544,7 @@
 </aside>
 
 <script src="js/config.js"></script>
+<script src="js/carousel.js"></script>
 <script src="js/store.js"></script>
 
 <script>

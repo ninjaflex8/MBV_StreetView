@@ -12,36 +12,32 @@
     { image: "camisa_onepiace.jpg", alt: "Camiseta Zoro One Piece da coleção MBV StreetView" }
   ];
   const duration = 5000;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  document.querySelectorAll("[data-carousel]").forEach(carousel => {
+  function initializeCarousel(carousel, carouselSlides) {
     const image = carousel.querySelector("[data-carousel-image]");
     const count = carousel.querySelector("[data-carousel-count]");
     const status = carousel.querySelector("[data-carousel-status]");
     const progressBar = carousel.querySelector("[data-carousel-progress]");
     const progress = progressBar?.querySelector("span");
-    const toggle = carousel.querySelector("[data-carousel-toggle]");
     const previous = carousel.querySelector("[data-carousel-previous]");
     const next = carousel.querySelector("[data-carousel-next]");
     const imageBase = carousel.dataset.imageBase;
 
-    if (!image || !count || !status || !progressBar || !progress || !toggle || !previous || !next || !imageBase) return;
+    if (!image || !count || !status || !progressBar || !progress || !previous || !next || !imageBase || !carouselSlides.length) return;
 
     let index = 0;
     let timer = null;
     let progressTimer = null;
     let startedAt = 0;
     let remaining = duration;
-    let manuallyPaused = reducedMotion.matches;
-    let focusPaused = false;
 
     function showSlide(nextIndex, announce = true) {
-      index = (nextIndex + slides.length) % slides.length;
-      const slide = slides[index];
-      image.src = new URL(`${imageBase}${slide.image}`, document.baseURI).href;
+      index = (nextIndex + carouselSlides.length) % carouselSlides.length;
+      const slide = carouselSlides[index];
+      image.src = new URL(slide.image, new URL(imageBase, document.baseURI)).href;
       image.alt = slide.alt;
       count.textContent = `MBV / ${String(index + 1).padStart(3, "0")}`;
-      if (announce) status.textContent = `Imagem ${index + 1} de ${slides.length}: ${slide.alt}`;
+      if (announce) status.textContent = `Imagem ${index + 1} de ${carouselSlides.length}: ${slide.alt}`;
     }
 
     function updateProgress() {
@@ -63,7 +59,7 @@
     }
 
     function startTimer() {
-      if (manuallyPaused || focusPaused || document.hidden || carousel.matches(":hover") || timer) return;
+      if (document.hidden || carousel.closest("[hidden]") || timer) return;
       startedAt = Date.now();
       timer = window.setTimeout(() => {
         timer = null;
@@ -80,9 +76,7 @@
     }
 
     function refreshTimer() {
-      toggle.textContent = manuallyPaused ? "▶" : "Ⅱ";
-      toggle.setAttribute("aria-label", manuallyPaused ? "Iniciar carrossel" : "Pausar carrossel");
-      if (manuallyPaused || focusPaused || document.hidden || carousel.closest("[hidden]") || carousel.matches(":hover")) {
+      if (document.hidden || carousel.closest("[hidden]")) {
         stopTimer();
       } else {
         startTimer();
@@ -104,22 +98,7 @@
       showSlide(index + 1);
       restartTimer();
     });
-    toggle.addEventListener("click", () => {
-      manuallyPaused = !manuallyPaused;
-      refreshTimer();
-    });
-    carousel.addEventListener("mouseenter", refreshTimer);
-    carousel.addEventListener("mouseleave", refreshTimer);
-    carousel.addEventListener("focusin", () => {
-      focusPaused = true;
-      refreshTimer();
-    });
-    carousel.addEventListener("focusout", event => {
-      if (!carousel.contains(event.relatedTarget)) {
-        focusPaused = false;
-        refreshTimer();
-      }
-    });
+
     const hiddenContainer = carousel.closest("[hidden]");
     if (hiddenContainer) {
       new MutationObserver(refreshTimer).observe(hiddenContainer, {
@@ -127,14 +106,41 @@
         attributeFilter: ["hidden"]
       });
     }
-    document.addEventListener("visibilitychange", refreshTimer);
-    reducedMotion.addEventListener("change", event => {
-      manuallyPaused = event.matches;
-      refreshTimer();
-    });
 
+    document.addEventListener("visibilitychange", refreshTimer);
     showSlide(0, false);
     updateProgress();
     refreshTimer();
-  });
+  }
+
+  async function loadCatalogSlides() {
+    try {
+      const response = await fetch(`${window.MBV_API_URL}/produtos`, {
+        headers: window.MBV_API_HEADERS || {}
+      });
+      if (!response.ok) throw new Error(`Catálogo indisponível (HTTP ${response.status}).`);
+      const result = await response.json();
+      const catalogSlides = Array.isArray(result.produtos)
+          ? result.produtos
+              .filter(product => typeof product.imagemUrl === "string" && product.imagemUrl.trim())
+              .map(product => {
+                const imageUrl = new URL(product.imagemUrl, document.baseURI);
+                if (!["http:", "https:"].includes(imageUrl.protocol)) return null;
+                return { image: imageUrl.href, alt: product.nome };
+              })
+              .filter(slide => slide && typeof slide.alt === "string" && slide.alt.trim())
+          : [];
+      return catalogSlides.length ? catalogSlides : slides;
+    } catch (error) {
+      console.warn("Não foi possível carregar as imagens atuais do catálogo para o carrossel:", error.message);
+      return slides;
+    }
+  }
+
+  const carousels = [...document.querySelectorAll("[data-carousel]")];
+  if (carousels.length) {
+    loadCatalogSlides().then(catalogSlides => {
+      carousels.forEach(carousel => initializeCarousel(carousel, catalogSlides));
+    });
+  }
 })();
