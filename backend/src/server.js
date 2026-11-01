@@ -80,14 +80,17 @@ if (missingProductionSettings.length > 0) {
   );
   process.exitCode = 1;
 } else {
-  db.connect((err) => {
+  db.getConnection((err, connection) => {
     if (err) {
       console.error("Erro ao conectar ao MySQL:", err.message);
-      db.destroy();
+      db.end((closeError) => {
+        if (closeError) console.error("Erro ao encerrar o pool MySQL:", closeError.message);
+      });
       process.exitCode = 1;
       return;
     }
 
+    connection.release();
     console.log("Conectado ao MySQL com sucesso!");
     app.listen(PORT, () => {
       console.log(`Servidor rodando na porta ${PORT}`);

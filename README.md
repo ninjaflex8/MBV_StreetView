@@ -45,6 +45,8 @@ As migrações não criam nem recriam o banco ou a tabela `usuarios`. Antes de e
 
 Depois de confirmar `SHOW CREATE TABLE usuarios` (especialmente o tipo de `usuarios.id`) e fazer um backup, execute `backend/database/migrations/002-create-commerce-tables.sql`. A migração cria categorias, produtos, variações, estoque, movimentações e pedidos e cadastra os oito produtos que já existiam na vitrine, sem duplicá-los quando executada novamente. Os produtos preservam preços, categorias e caminhos das imagens; como o estoque e as combinações reais de tamanho/cor não estavam registrados no projeto, as variações e quantidades **não são inventadas**. Cadastre as combinações reais e o estoque no painel antes de habilitar vendas. A migração verifica previamente se `usuarios.id` é `BIGINT UNSIGNED`, compatível com as colunas `usuario_id`; se o tipo for diferente, interrompe antes de criar as tabelas para que a migração possa ser ajustada com segurança.
 
+Depois da migração 002, execute `backend/database/migrations/003-product-size-control.sql` para adicionar ao produto o controle de variação de tamanho. Produtos existentes com variações preservam o comportamento atual; acessórios existentes sem variações passam a não exigir tamanho. Ao cadastrar um produto na categoria Acessórios, o painel também desmarca tamanhos por padrão; o administrador pode ativá-los para anéis, pulseiras, meias e outros itens com medidas. Variações sem tamanho usam internamente o rótulo `Único`, que não é exibido como opção de tamanho na loja.
+
 Para promover uma conta existente a administradora, substitua `SUBSTITUA_PELO_EMAIL_DO_PROPRIETARIO` em `backend/database/migrations/promote-user-to-admin.sql` pelo e-mail escolhido e execute o arquivo manualmente. Não existe endpoint público para conceder perfil administrativo.
 
 ## API atual
@@ -58,7 +60,7 @@ Para promover uma conta existente a administradora, substitua `SUBSTITUA_PELO_EM
 | `GET` | `/produtos` | Público | Lista produtos e variações de produtos ativos |
 | `GET` | `/produtos/categorias` | Público | Lista categorias ativas |
 | `GET` | `/admin/dashboard` | JWT + `admin` | Indicadores e movimentações recentes |
-| `GET`, `POST`, `PUT`, `DELETE` | `/admin/produtos` e `/admin/produtos/:id` | JWT + `admin` | Cadastro, edição e desativação de produtos |
+| `GET`, `POST`, `PUT`, `DELETE` | `/admin/produtos` e `/admin/produtos/:id` | JWT + `admin` | Cadastro e edição; exclusão exige produto inativo e sem pedidos ou histórico de estoque |
 | `POST` | `/admin/produtos/:id/variacoes` | JWT + `admin` | Cria uma variação de tamanho/cor |
 | `PUT`, `DELETE`, `PATCH` | `/admin/variacoes/:id` e `/admin/variacoes/:id/estoque` | JWT + `admin` | Edita variação, ajusta estoque ou remove variação sem estoque/histórico |
 | `GET`, `POST`, `PUT`, `DELETE` | `/admin/categorias` | JWT + `admin` | Gerencia categorias; categorias com produtos não podem ser apagadas |

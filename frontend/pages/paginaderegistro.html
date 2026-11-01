@@ -25,11 +25,29 @@
         </div>
         <div class="form-group">
             <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="De 6 a 50 caracteres" minlength="6" maxlength="50" autocomplete="new-password" required>
+            <div class="password-input-wrap">
+                <input type="password" id="senha" name="senha" placeholder="De 6 a 50 caracteres" minlength="6" maxlength="50" autocomplete="new-password" required>
+                <button class="password-toggle" type="button" aria-label="Mostrar senha" aria-controls="senha" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path class="password-eye-slash" d="m4 4 16 16"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
         <div class="form-group">
             <label for="confirmarSenha">Confirmar senha</label>
-            <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" minlength="6" maxlength="50" autocomplete="new-password" required>
+            <div class="password-input-wrap">
+                <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" minlength="6" maxlength="50" autocomplete="new-password" required>
+                <button class="password-toggle" type="button" aria-label="Mostrar senha" aria-controls="confirmarSenha" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path class="password-eye-slash" d="m4 4 16 16"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
         <div class="form-actions">
             <button id="cadastro_BTN" type="submit">Cadastrar</button>
@@ -41,6 +59,7 @@
 </main>
 
 <script src="../js/config.js" defer></script>
+<script src="../js/password-visibility.js" defer></script>
 <script src="../js/register.js" defer></script>
 </body>
 </html>

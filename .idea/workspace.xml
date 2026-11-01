@@ -7,20 +7,20 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="fix: corrigir funcionalidades do carrossel e melhorar a integração com o catálogo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados.">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="fix: melhorar validação e upload de imagens de produtos no painel administrativo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/controllers/commerceController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/commerceController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/routes/adminRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/adminRoutes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/database/connection.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/database/connection.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/tests/productVariants.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/productVariants.test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/js/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/carousel.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/carousel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/orders.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/orders.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/js/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/store.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/pages/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/areadelogin.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/areadelogin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/pages/paginaderegistro.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/paginaderegistro.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,7 +300,8 @@
     <MESSAGE value="refactor: improve login and registration pages, enhance filter functionality, and update styles" />
     <MESSAGE value="fix: corrigir estoque, sacola e painel administrativo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
     <MESSAGE value="fix: corrigir funcionalidades do carrossel e melhorar a integração com o catálogo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: corrigir funcionalidades do carrossel e melhorar a integração com o catálogo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
+    <MESSAGE value="fix: melhorar validação e upload de imagens de produtos no painel administrativo" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: melhorar validação e upload de imagens de produtos no painel administrativo" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -138,7 +138,9 @@
       if (variation) {
         const variantLabel = document.createElement("p");
         variantLabel.className = "cart-item-variant";
-        variantLabel.textContent = `${item.size || variation.tamanho} / ${item.color || variation.cor}`;
+        variantLabel.textContent = product.controlsSize
+            ? `${item.size || variation.tamanho} / ${item.color || variation.cor}`
+            : item.color || variation.cor;
         details.append(name, price, variantLabel);
       } else {
         details.append(name, price);
@@ -408,7 +410,9 @@
       const variation = product.variations?.find(entry => entry.id === item.variationId)
           || product.variations?.[0];
       const variantText = variation
-          ? ` (${item.size || variation.tamanho}, ${item.color || variation.cor})`
+          ? product.controlsSize
+              ? ` (${item.size || variation.tamanho}, ${item.color || variation.cor})`
+              : ` (${item.color || variation.cor})`
           : "";
       return `${item.quantity}x ${product.name}${variantText} — ${money(product.price * item.quantity)}`;
     });
@@ -482,7 +486,7 @@
     selectorLabel.className = "product-variation-label";
     const selectorId = `variation-${product.id}`;
     selectorLabel.htmlFor = selectorId;
-    selectorLabel.textContent = "Tamanho / cor";
+    selectorLabel.textContent = product.controlsSize ? "Tamanho / cor" : "Cor";
     const selector = document.createElement("select");
     selector.id = selectorId;
     selector.dataset.variationSelect = "";
@@ -491,14 +495,16 @@
     prompt.value = "";
     prompt.textContent = !product.variations.length
         ? "Variações não cadastradas"
-        : available.length ? "Selecione tamanho e cor" : "Sem estoque";
+        : available.length
+            ? product.controlsSize ? "Selecione tamanho e cor" : "Selecione uma cor"
+            : "Sem estoque";
     prompt.disabled = true;
     prompt.selected = true;
     selector.append(prompt);
     product.variations.forEach(variation => {
       const option = document.createElement("option");
       option.value = String(variation.id);
-      option.textContent = `${variation.tamanho} / ${variation.cor} — ${variation.estoque} disponível(is)`;
+      option.textContent = `${product.controlsSize ? `${variation.tamanho} / ` : ""}${variation.cor} — ${variation.estoque} disponível(is)`;
       option.disabled = variation.estoque < 1;
       selector.append(option);
     });
@@ -572,6 +578,7 @@
           image: entry.imagemUrl,
           description: entry.descricao || "",
           categoria: entry.categoria,
+          controlsSize: entry.controlaTamanho !== false,
           variations: entry.variacoes,
           originalIndex: index
         };

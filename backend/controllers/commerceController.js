@@ -18,6 +18,14 @@ function inteiroPositivo(value) {
   return Number.isSafeInteger(Number(value)) && Number(value) > 0;
 }
 
+function normalizarTexto(value) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLocaleLowerCase("pt-BR");
+}
+
+function ehTamanhoUnico(value) {
+  return typeof value === "string" && ["unico", "tamanho unico"].includes(normalizarTexto(value));
+}
+
 function criarSlug(value) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -83,6 +91,15 @@ function validarProduto(body, parcial = false) {
     resultado.ativo = dados.ativo ? 1 : 0;
   }
 
+  if (!parcial || Object.hasOwn(dados, "controlaTamanho")) {
+    if (dados.controlaTamanho !== undefined && typeof dados.controlaTamanho !== "boolean") {
+      return { erro: "O campo controlaTamanho deve ser verdadeiro ou falso." };
+    }
+    resultado.controlaTamanho = dados.controlaTamanho === undefined
+        ? 1
+        : dados.controlaTamanho ? 1 : 0;
+  }
+
   return { dados: resultado };
 }
 
@@ -140,6 +157,7 @@ async function carregarProdutos(query) {
     preco: Number(produto.preco),
     imagemUrl: produto.imagem_url,
     ativo: Boolean(produto.ativo),
+    controlaTamanho: Boolean(produto.controla_tamanho),
     categoria: {
       id: Number(produto.categoria_id),
       nome: produto.categoria_nome,
@@ -153,7 +171,7 @@ exports.listarProdutos = async (req, res) => {
   try {
     const incluirInativos = req.usuario?.perfil === "admin" && req.query.todos === "true";
     const sql = `SELECT p.id, p.nome, p.slug, p.descricao, p.preco, p.imagem_url,
-                        p.ativo, p.categoria_id, c.nome AS categoria_nome,
+                        p.ativo, p.controla_tamanho, p.categoria_id, c.nome AS categoria_nome,
                         c.slug AS categoria_slug
                  FROM produtos p
                  JOIN categorias c ON c.id = p.categoria_id
@@ -273,8 +291,11 @@ exports.excluirCategoria = async (req, res) => {
 exports.criarProduto = async (req, res) => {
   const validacao = validarProduto(req.body);
   if (validacao.erro) return enviarErro(res, 400, validacao.erro);
+  const variacoesRecebidas = req.body.variacoes === undefined ? [] : req.body.variacoes;
   const variacoesValidadas = validarVariacoes(
-      req.body.variacoes === undefined ? [] : req.body.variacoes
+      validacao.dados.controlaTamanho || !Array.isArray(variacoesRecebidas)
+          ? variacoesRecebidas
+          : variacoesRecebidas.map(variacao => ({ ...variacao, tamanho: "Único" }))
   );
   if (variacoesValidadas.erro) return enviarErro(res, 400, variacoesValidadas.erro);
 
@@ -299,8 +320,8 @@ exports.criarProduto = async (req, res) => {
     }
     const [produtoResult] = await conn.query(
         `INSERT INTO produtos
-         (categoria_id, nome, slug, descricao, preco, imagem_url, ativo)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+         (categoria_id, nome, slug, descricao, preco, imagem_url, ativo, controla_tamanho)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           validacao.dados.categoriaId,
           validacao.dados.nome,
@@ -308,7 +329,8 @@ exports.criarProduto = async (req, res) => {
           validacao.dados.descricao,
           validacao.dados.preco,
           validacao.dados.imagemUrl,
-          validacao.dados.ativo
+          validacao.dados.ativo,
+          validacao.dados.controlaTamanho
         ]
     );
     for (const variacao of variacoesValidadas.dados) {
@@ -354,60 +376,168 @@ exports.atualizarProduto = async (req, res) => {
     preco: "preco",
     categoriaId: "categoria_id",
     imagemUrl: "imagem_url",
-    ativo: "ativo"
+    ativo: "ativo",
+    controlaTamanho: "controla_tamanho"
   };
   const entradas = Object.entries(campos);
   const sql = entradas.map(([chave]) => `${colunas[chave]} = ?`).join(", ");
+  let conn;
   try {
+    if (Object.hasOwn(campos, "controlaTamanho")) {
+      conn = await db.promise().getConnection();
+      await conn.beginTransaction();
+      const [produtos] = await conn.query(
+          "SELECT id FROM produtos WHERE id = ? FOR UPDATE",
+          [Number(req.params.id)]
+      );
+      if (!produtos.length) {
+        await reverterTransacao(conn);
+        return enviarErro(res, 404, "Produto não encontrado.");
+      }
+      if (!campos.controlaTamanho) {
+        const [variacoes] = await conn.query(
+            "SELECT tamanho, cor FROM variacoes_produtos WHERE produto_id = ? FOR UPDATE",
+            [Number(req.params.id)]
+        );
+        const coresSemTamanho = new Set();
+        const variacoesInvalidas = variacoes.some(variacao => {
+          const cor = normalizarTexto(variacao.cor);
+          const corDuplicada = coresSemTamanho.has(cor);
+          coresSemTamanho.add(cor);
+          return !ehTamanhoUnico(variacao.tamanho) || corDuplicada;
+        });
+        if (variacoesInvalidas) {
+          await reverterTransacao(conn);
+          return enviarErro(
+              res,
+              409,
+              "Não é possível desativar tamanhos enquanto houver variações com tamanho cadastrado. Preserve essas variações para manter o estoque e o histórico."
+          );
+        }
+      }
+    }
+    const query = (sql, params) => conn
+        ? conn.query(sql, params)
+        : db.promise().query(sql, params);
     if (campos.categoriaId) {
-      const [categorias] = await db.promise().query(
+      const [categorias] = await query(
           "SELECT id FROM categorias WHERE id = ? AND ativo = 1",
           [campos.categoriaId]
       );
-      if (!categorias.length) return enviarErro(res, 400, "A categoria selecionada não existe ou está inativa.");
+      if (!categorias.length) {
+        if (conn) await reverterTransacao(conn);
+        return enviarErro(res, 400, "A categoria selecionada não existe ou está inativa.");
+      }
     }
-    const [result] = await db.promise().query(
+    const [result] = await query(
         `UPDATE produtos SET ${sql} WHERE id = ?`,
         [...entradas.map(([, value]) => value), Number(req.params.id)]
     );
-    if (!result.affectedRows) return enviarErro(res, 404, "Produto não encontrado ou sem alterações.");
+    if (!result.affectedRows) {
+      if (conn) await reverterTransacao(conn);
+      return enviarErro(res, 404, "Produto não encontrado ou sem alterações.");
+    }
+    if (conn) await conn.commit();
     return res.status(200).json({ message: "Produto atualizado." });
   } catch (err) {
+    await reverterTransacao(conn);
     if (err.code === "ER_DUP_ENTRY") return enviarErro(res, 409, "Já existe um produto com nome equivalente.");
     console.error("Erro ao atualizar produto:", err.code || err.message);
     return enviarErro(res, 500, "Não foi possível atualizar o produto.");
+  } finally {
+    if (conn) conn.release();
   }
 };
 
 exports.excluirProduto = async (req, res) => {
   if (!inteiroPositivo(req.params.id)) return enviarErro(res, 400, "Identificador de produto inválido.");
+  let conn;
   try {
-    const [result] = await db.promise().query(
-        "UPDATE produtos SET ativo = 0 WHERE id = ? AND ativo = 1",
+    conn = await db.promise().getConnection();
+    await conn.beginTransaction();
+    const [produtos] = await conn.query(
+        "SELECT id, ativo FROM produtos WHERE id = ? FOR UPDATE",
         [Number(req.params.id)]
     );
-    if (!result.affectedRows) return enviarErro(res, 404, "Produto não encontrado ou já desativado.");
-    return res.status(200).json({ message: "Produto desativado; o histórico e os pedidos foram preservados." });
+    if (!produtos.length) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 404, "Produto não encontrado.");
+    }
+    if (produtos[0].ativo) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 409, "Inative o produto antes de excluí-lo.");
+    }
+
+    await conn.query(
+        "SELECT id FROM variacoes_produtos WHERE produto_id = ? FOR UPDATE",
+        [Number(req.params.id)]
+    );
+    const [historico] = await conn.query(
+        `SELECT v.id
+         FROM variacoes_produtos v
+         WHERE v.produto_id = ?
+           AND (
+             EXISTS (SELECT 1 FROM itens_pedido i WHERE i.variacao_id = v.id)
+             OR EXISTS (SELECT 1 FROM movimentacoes_estoque m WHERE m.variacao_id = v.id)
+           )
+         LIMIT 1`,
+        [Number(req.params.id)]
+    );
+    if (historico.length) {
+      await reverterTransacao(conn);
+      return enviarErro(
+          res,
+          409,
+          "O produto possui pedidos ou histórico de estoque vinculado e não pode ser excluído."
+      );
+    }
+
+    await conn.query("DELETE FROM variacoes_produtos WHERE produto_id = ?", [Number(req.params.id)]);
+    const [result] = await conn.query(
+        "DELETE FROM produtos WHERE id = ? AND ativo = 0",
+        [Number(req.params.id)]
+    );
+    if (!result.affectedRows) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 409, "O produto não está mais disponível para exclusão.");
+    }
+    await conn.commit();
+    return res.status(200).json({ message: "Produto excluído." });
   } catch (err) {
-    console.error("Erro ao desativar produto:", err.code || err.message);
-    return enviarErro(res, 500, "Não foi possível desativar o produto.");
+    await reverterTransacao(conn);
+    if (err.code === "ER_ROW_IS_REFERENCED_2") {
+      return enviarErro(res, 409, "O produto possui dados vinculados e não pode ser excluído.");
+    }
+    console.error("Erro ao excluir produto:", err.code || err.message);
+    return enviarErro(res, 500, "Não foi possível excluir o produto.");
+  } finally {
+    if (conn) conn.release();
   }
 };
 
 exports.criarVariacao = async (req, res) => {
   if (!inteiroPositivo(req.params.id)) return enviarErro(res, 400, "Identificador de produto inválido.");
-  const validadas = validarVariacoes([req.body]);
-  if (validadas.erro) return enviarErro(res, 400, validadas.erro);
-  const variacao = validadas.dados[0];
   let conn;
   try {
     conn = await db.promise().getConnection();
     await conn.beginTransaction();
-    const [produtos] = await conn.query("SELECT id FROM produtos WHERE id = ? FOR UPDATE", [Number(req.params.id)]);
+    const [produtos] = await conn.query(
+        "SELECT id, controla_tamanho AS controlaTamanho FROM produtos WHERE id = ? FOR UPDATE",
+        [Number(req.params.id)]
+    );
     if (!produtos.length) {
       await reverterTransacao(conn);
       return enviarErro(res, 404, "Produto não encontrado.");
     }
+    const variacaoInput = produtos[0].controlaTamanho
+        ? req.body
+        : { ...req.body, tamanho: "Único" };
+    const validadas = validarVariacoes([variacaoInput]);
+    if (validadas.erro) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 400, validadas.erro);
+    }
+    const variacao = validadas.dados[0];
     const [result] = await conn.query(
         "INSERT INTO variacoes_produtos (produto_id, tamanho, cor, estoque) VALUES (?, ?, ?, ?)",
         [Number(req.params.id), variacao.tamanho, variacao.cor, variacao.estoque]
@@ -434,20 +564,56 @@ exports.criarVariacao = async (req, res) => {
 
 exports.atualizarVariacao = async (req, res) => {
   if (!inteiroPositivo(req.params.id)) return enviarErro(res, 400, "Identificador de variação inválido.");
-  const validadas = validarVariacoes([{ ...req.body, estoque: 0 }]);
-  if (validadas.erro) return enviarErro(res, 400, validadas.erro);
-  const { tamanho, cor } = validadas.dados[0];
+  let conn;
   try {
-    const [result] = await db.promise().query(
+    conn = await db.promise().getConnection();
+    await conn.beginTransaction();
+    const [referencias] = await conn.query(
+        "SELECT produto_id FROM variacoes_produtos WHERE id = ?",
+        [Number(req.params.id)]
+    );
+    if (!referencias.length) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 404, "Variação não encontrada.");
+    }
+    const [produtos] = await conn.query(
+        "SELECT controla_tamanho AS controlaTamanho FROM produtos WHERE id = ? FOR UPDATE",
+        [referencias[0].produto_id]
+    );
+    const [variacoes] = await conn.query(
+        "SELECT id FROM variacoes_produtos WHERE id = ? AND produto_id = ? FOR UPDATE",
+        [Number(req.params.id), referencias[0].produto_id]
+    );
+    if (!variacoes.length) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 404, "Variação não encontrada.");
+    }
+    const variacaoInput = produtos[0].controlaTamanho
+        ? { ...req.body, estoque: 0 }
+        : { ...req.body, tamanho: "Único", estoque: 0 };
+    const validadas = validarVariacoes([variacaoInput]);
+    if (validadas.erro) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 400, validadas.erro);
+    }
+    const { tamanho, cor } = validadas.dados[0];
+    const [result] = await conn.query(
         "UPDATE variacoes_produtos SET tamanho = ?, cor = ? WHERE id = ?",
         [tamanho, cor, Number(req.params.id)]
     );
-    if (!result.affectedRows) return enviarErro(res, 404, "Variação não encontrada ou sem alterações.");
+    if (!result.affectedRows) {
+      await reverterTransacao(conn);
+      return enviarErro(res, 404, "Variação não encontrada ou sem alterações.");
+    }
+    await conn.commit();
     return res.status(200).json({ message: "Variação atualizada." });
   } catch (err) {
+    await reverterTransacao(conn);
     if (err.code === "ER_DUP_ENTRY") return enviarErro(res, 409, "Essa combinação de tamanho e cor já existe.");
     console.error("Erro ao atualizar variação:", err.code || err.message);
     return enviarErro(res, 500, "Não foi possível atualizar a variação.");
+  } finally {
+    if (conn) conn.release();
   }
 };
 

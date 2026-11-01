@@ -30,14 +30,23 @@
 
         <div class="input-group">
             <label for="loginSenha">Senha</label>
-            <input
-                    type="password"
-                    id="loginSenha"
-                    name="senha"
-                    placeholder="Sua senha"
-                    autocomplete="current-password"
-                    required
-            >
+            <div class="password-input-wrap">
+                <input
+                        type="password"
+                        id="loginSenha"
+                        name="senha"
+                        placeholder="Sua senha"
+                        autocomplete="current-password"
+                        required
+                >
+                <button class="password-toggle" type="button" aria-label="Mostrar senha" aria-controls="loginSenha" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path class="password-eye-slash" d="m4 4 16 16"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
 
         <label class="remember-email" for="rememberEmail">
@@ -56,6 +65,7 @@
 </main>
 
 <script src="../js/config.js" defer></script>
+<script src="../js/password-visibility.js" defer></script>
 <script src="../js/login.js" defer></script>
 </body>
 </html>

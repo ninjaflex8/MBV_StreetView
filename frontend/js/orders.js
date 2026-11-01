@@ -57,7 +57,11 @@
         addText(card, "p", `${new Date(order.criadoEm).toLocaleString("pt-BR")} · Total ${Number(order.total).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}`);
         const items = document.createElement("ul");
         order.itens.forEach(item => {
-          addText(items, "li", `${item.quantidade} × ${item.produto} (${item.tamanho}, ${item.cor})`);
+          const variantLabel = ["único", "unico", "tamanho único", "tamanho unico"]
+              .includes(item.tamanho.trim().toLocaleLowerCase("pt-BR"))
+              ? item.cor
+              : `${item.tamanho}, ${item.cor}`;
+          addText(items, "li", `${item.quantidade} × ${item.produto} (${variantLabel})`);
         });
         card.append(items);
         container.append(card);

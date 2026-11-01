@@ -8,6 +8,7 @@
   const productForm = document.getElementById("productForm");
   const productImageInput = document.getElementById("productImage");
   const productImageUrl = document.getElementById("productImageUrl");
+  const productHasSizes = document.getElementById("productHasSizes");
   const productImagePreview = document.getElementById("productImagePreview");
   const productImagePreviewImage = document.getElementById("productImagePreviewImage");
   const productImagePreviewName = document.getElementById("productImagePreviewName");
@@ -20,6 +21,12 @@
   function showMessage(text, error = false) {
     message.textContent = text;
     message.classList.toggle("is-error", error);
+  }
+
+  function setDefaultSizeOptionForCategory() {
+    const category = document.getElementById("productCategory");
+    const selectedCategory = category.selectedOptions[0];
+    productHasSizes.checked = selectedCategory?.dataset.slug !== "acessorios";
   }
 
   function resolveImageUrl(imageUrl) {
@@ -140,8 +147,10 @@
     categorias.filter(category => category.ativo).forEach(category => {
       const option = element("option", category.nome);
       option.value = category.id;
+      option.dataset.slug = category.slug;
       select.append(option);
     });
+    if (!document.getElementById("productId").value) setDefaultSizeOptionForCategory();
     renderCategories();
   }
 
@@ -181,9 +190,13 @@
 
   function movementRow(movement) {
     const row = document.createElement("tr");
+    const variationLabel = ["único", "unico", "tamanho único", "tamanho unico"]
+        .includes(movement.tamanho.trim().toLocaleLowerCase("pt-BR"))
+        ? `${movement.produto} — ${movement.cor}`
+        : `${movement.produto} — ${movement.tamanho} / ${movement.cor}`;
     [
       new Date(movement.criadoEm).toLocaleString("pt-BR"),
-      `${movement.produto} — ${movement.tamanho} / ${movement.cor}`,
+      variationLabel,
       movement.tipo,
       `${movement.quantidade} (${movement.estoqueAnterior} → ${movement.estoquePosterior})`,
       movement.responsavel || "Sistema"
@@ -224,6 +237,24 @@
         }
       });
       actions.append(variations, edit, deactivate);
+      if (!product.ativo) {
+        const remove = element("button", "Excluir", "admin-small-button admin-danger-button");
+        remove.type = "button";
+        remove.addEventListener("click", async () => {
+          const confirmation = window.confirm(
+              `Excluir permanentemente o produto "${product.nome}"? Esta ação não pode ser desfeita. Produtos com pedidos ou histórico de estoque não podem ser excluídos.`
+          );
+          if (!confirmation) return;
+          try {
+            await api(`/admin/produtos/${product.id}`, { method: "DELETE" });
+            await Promise.all([loadProducts(), loadDashboard()]);
+            showMessage("Produto excluído.");
+          } catch (error) {
+            showMessage(error.message, true);
+          }
+        });
+        actions.append(remove);
+      }
       row.append(actions);
       return row;
     });
@@ -243,6 +274,7 @@
     productImageUrl.value = product.imagemUrl || "";
     showProductImagePreview(product.imagemUrl, product.imagemUrl ? "Imagem atual" : "");
     document.getElementById("productActive").checked = product.ativo;
+    productHasSizes.checked = product.controlaTamanho;
     document.getElementById("productSubmit").textContent = "Salvar alterações";
     document.getElementById("productCancelEdit").hidden = false;
     document.getElementById("productName").focus();
@@ -253,6 +285,7 @@
     productForm.reset();
     document.getElementById("productId").value = "";
     document.getElementById("productActive").checked = true;
+    setDefaultSizeOptionForCategory();
     productImageUrl.value = "";
     showProductImagePreview("", "");
     document.getElementById("productSubmit").textContent = "Cadastrar produto";
@@ -263,6 +296,15 @@
     produtoVariacoesId = product.id;
     document.getElementById("variantProductName").textContent = product.nome;
     document.getElementById("variantManager").hidden = false;
+    const sizeField = document.getElementById("variantSizeField");
+    const sizeInput = document.getElementById("variantSize");
+    sizeField.hidden = !product.controlaTamanho;
+    sizeInput.required = product.controlaTamanho;
+    sizeInput.disabled = !product.controlaTamanho;
+    sizeInput.value = product.controlaTamanho ? "" : "Único";
+    document.getElementById("variantSize").placeholder = product.controlaTamanho
+        ? "Ex.: P, M, G ou número"
+        : "Sem tamanho";
     renderVariants(product);
     document.getElementById("variantManagerTitle").focus?.();
   }
@@ -276,7 +318,11 @@
       size.value = variation.tamanho;
       size.maxLength = 30;
       size.setAttribute("aria-label", `Tamanho da variação ${variation.id}`);
-      sizeCell.append(size);
+      if (product.controlaTamanho) {
+        sizeCell.append(size);
+      } else {
+        sizeCell.textContent = "Sem tamanho";
+      }
       row.append(sizeCell);
       const colorCell = document.createElement("td");
       const color = document.createElement("input");
@@ -292,7 +338,10 @@
         try {
           await api(`/admin/variacoes/${variation.id}`, {
             method: "PUT",
-            body: JSON.stringify({ tamanho: size.value, cor: color.value })
+            body: JSON.stringify({
+              tamanho: product.controlaTamanho ? size.value : "Único",
+              cor: color.value
+            })
           });
           await loadProducts();
           const updated = produtos.find(item => item.id === produtoVariacoesId);
@@ -303,7 +352,10 @@
         }
       });
       const adjustmentType = document.createElement("select");
-      adjustmentType.setAttribute("aria-label", `Tipo de ajuste para ${variation.tamanho}, ${variation.cor}`);
+      adjustmentType.setAttribute(
+          "aria-label",
+          `Tipo de ajuste para ${product.controlaTamanho ? `${variation.tamanho}, ` : ""}${variation.cor}`
+      );
       [["entrada", "Entrada"], ["saida", "Saída"], ["ajuste", "Definir total"]].forEach(([value, label]) => {
         const option = element("option", label);
         option.value = value;
@@ -314,7 +366,10 @@
       quantity.min = "0";
       quantity.step = "1";
       quantity.value = "1";
-      quantity.setAttribute("aria-label", `Quantidade para ${variation.tamanho}, ${variation.cor}`);
+      quantity.setAttribute(
+          "aria-label",
+          `Quantidade para ${product.controlaTamanho ? `${variation.tamanho}, ` : ""}${variation.cor}`
+      );
       const adjust = element("button", "Salvar estoque", "admin-small-button");
       adjust.type = "button";
       adjust.addEventListener("click", async () => {
@@ -369,6 +424,7 @@
       const name = document.createElement("input");
       name.value = category.nome;
       name.maxLength = 80;
+      name.className = "category-name-input";
       name.setAttribute("aria-label", `Nome da categoria ${category.nome}`);
       nameCell.append(name);
       row.append(nameCell, element("td", String(category.quantidadeProdutos)));
@@ -497,6 +553,7 @@
     data.append("descricao", document.getElementById("productDescription").value);
     data.append("preco", document.getElementById("productPrice").value);
     data.append("categoriaId", document.getElementById("productCategory").value);
+    data.append("controlaTamanho", String(productHasSizes.checked));
     data.append("imagemUrl", productImageUrl.value);
     data.append("ativo", String(document.getElementById("productActive").checked));
     if (productImageInput.files[0]) data.append("imagem", productImageInput.files[0]);
@@ -513,6 +570,10 @@
     }
   });
 
+  document.getElementById("productCategory").addEventListener("change", () => {
+    if (!document.getElementById("productId").value) setDefaultSizeOptionForCategory();
+  });
+
   document.getElementById("productCancelEdit").addEventListener("click", clearProductForm);
   document.getElementById("variantForm").addEventListener("submit", async event => {
     event.preventDefault();
@@ -521,7 +582,9 @@
       await api(`/admin/produtos/${produtoVariacoesId}/variacoes`, {
         method: "POST",
         body: JSON.stringify({
-          tamanho: document.getElementById("variantSize").value,
+          tamanho: document.getElementById("variantSize").disabled
+              ? "Único"
+              : document.getElementById("variantSize").value,
           cor: document.getElementById("variantColor").value,
           estoque: Number(document.getElementById("variantStock").value)
         })

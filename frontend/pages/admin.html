@@ -71,6 +71,11 @@
               <img id="productImagePreviewImage" alt="Pré-visualização da imagem do produto">
               <span id="productImagePreviewName"></span>
             </div>
+            <label class="admin-checkbox" for="productHasSizes">
+              <input id="productHasSizes" name="controlaTamanho" type="checkbox" checked>
+              Este produto possui variações de tamanho
+            </label>
+            <p class="admin-image-hint">Para acessórios, deixe desmarcado quando não houver tamanhos. Você pode ativar para anéis, pulseiras, meias ou outros itens com medidas. Não é possível desativar depois de cadastrar variações com tamanhos.</p>
             <label class="admin-checkbox"><input id="productActive" name="ativo" type="checkbox" checked> Produto ativo na loja</label>
             <p>Cadastre o produto sem presumir tamanhos ou cores. Depois, use “Variações / estoque” no catálogo para cadastrar apenas as combinações reais. A quantidade inicial de cada variação pode ser zero.</p>
             <div class="admin-form-actions">
@@ -85,7 +90,7 @@
             <h3 id="variantManagerTitle" tabindex="-1">Variações do produto</h3>
             <p id="variantProductName"></p>
             <form id="variantForm" class="admin-form admin-inline-form">
-              <label for="variantSize">Tamanho</label><input id="variantSize" maxlength="30" placeholder="Ex.: P, M, G ou Tamanho único" required>
+              <div id="variantSizeField"><label for="variantSize">Tamanho</label><input id="variantSize" maxlength="30" placeholder="Ex.: P, M, G ou número"></div>
               <label for="variantColor">Cor</label><input id="variantColor" maxlength="40" placeholder="Informe a cor desta variação" required>
               <label for="variantStock">Estoque inicial</label><input id="variantStock" type="number" min="0" max="1000000" step="1" value="0" required>
               <button class="admin-secondary-button" type="submit">Adicionar variação</button>
@@ -96,7 +101,7 @@
 
         <section class="admin-section" id="section-categories" aria-labelledby="categoriesTitle" hidden>
           <h2 id="categoriesTitle">Categorias</h2>
-          <form id="categoryForm" class="admin-form admin-inline-form">
+          <form id="categoryForm" class="admin-form admin-inline-form admin-category-form">
             <label for="categoryName">Nova categoria</label>
             <input id="categoryName" minlength="2" maxlength="80" required>
             <button class="button button-dark" type="submit">Criar categoria</button>
