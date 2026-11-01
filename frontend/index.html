@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Conheça a curadoria MBV StreetView: camisetas, acessórios e moda urbana com identidade própria.">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#F5F3EE">
   <title>MBV StreetView | Moda urbana</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -26,13 +26,28 @@
       </span>
   </a>
 
-  <div class="nav-links">
-    <a href="#produtos">Shop</a>
+  <div class="nav-links" id="mainNavLinks">
+    <a href="#produtos">Loja</a>
     <a href="#manifesto">Manifesto</a>
     <a href="#contato">Contato</a>
   </div>
 
+  <button
+          class="mobile-menu-toggle"
+          id="mobileMenuToggle"
+          type="button"
+          aria-label="Abrir menu de navegação"
+          aria-expanded="false"
+          aria-controls="mainNavLinks"
+  ><span aria-hidden="true">☰</span></button>
+
   <div class="nav-actions">
+    <a id="ordersLink" class="account-link" href="pages/pedidos.html" hidden>
+      Meus pedidos
+    </a>
+    <a id="adminPanelLink" class="account-link" href="pages/admin.html" hidden>
+      Painel admin <span aria-hidden="true">↗</span>
+    </a>
     <a id="userButton" class="account-link" href="pages/areadelogin.html">
       Entrar <span aria-hidden="true">↗</span>
     </a>
@@ -88,14 +103,18 @@
     </div>
 
     <div class="hero-visual">
-      <div class="hero-image-frame">
+      <div class="hero-image-frame" id="heroCarousel" role="region" aria-roledescription="carrossel" aria-label="Destaques da coleção MBV">
         <img
+                id="heroCarouselImage"
                 src="imagens/camisa_brooklyn.jpg"
                 alt="Camiseta Brooklyn da coleção MBV StreetView"
         >
-        <span class="image-index">MBV / 001</span>
+        <span class="image-index" id="heroCarouselCount" aria-hidden="true">MBV / 001</span>
         <span class="image-stamp">STREET<br>UNIFORM</span>
+        <button class="carousel-control carousel-previous" id="heroCarouselPrevious" type="button" aria-label="Ver imagem anterior do destaque">‹</button>
+        <button class="carousel-control carousel-next" id="heroCarouselNext" type="button" aria-label="Ver próxima imagem do destaque">›</button>
       </div>
+      <p class="visually-hidden" id="heroCarouselStatus" role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="hero-side-note">
         EXPRESSÃO INDIVIDUAL — DESDE O PRIMEIRO OLHAR
       </div>
@@ -514,6 +533,9 @@
     >
       Copiar resumo do pedido <span>↗</span>
     </button>
+    <button id="checkoutOrder" class="button button-dark checkout-button" type="button" disabled>
+      Criar pedido pendente <span aria-hidden="true">↗</span>
+    </button>
 
     <button id="continueShopping" class="continue-shopping" type="button">
       Continuar explorando
@@ -530,12 +552,13 @@
   (() => {
     const userButton = document.getElementById("userButton");
     const logoutButton = document.getElementById("logoutButton");
+    const adminPanelLink = document.getElementById("adminPanelLink");
+    const ordersLink = document.getElementById("ordersLink");
 
     function clearSession() {
       localStorage.removeItem("authToken");
       localStorage.removeItem("userName");
       localStorage.removeItem("userEmail");
-      localStorage.removeItem("rememberedEmail");
     }
 
     function showLoggedOut() {
@@ -543,12 +566,24 @@
       userButton.textContent = "Entrar ↗";
       userButton.href = "pages/areadelogin.html";
       logoutButton.hidden = true;
+      adminPanelLink.hidden = true;
+      ordersLink.hidden = true;
     }
 
-    function showLoggedIn(name) {
+    function showLoggedIn(name, perfil) {
       userButton.hidden = false;
       userButton.textContent = "Olá, " + (name || "cliente");
       userButton.href = "#";
+      logoutButton.hidden = false;
+      adminPanelLink.hidden = perfil !== "admin";
+      ordersLink.hidden = false;
+    }
+
+    function showSessionUnavailable() {
+      adminPanelLink.hidden = true;
+      ordersLink.hidden = true;
+      userButton.textContent = "Sessão não validada";
+      userButton.href = "pages/areadelogin.html";
       logoutButton.hidden = false;
     }
 
@@ -583,21 +618,18 @@
               }
 
               if (!response.ok) {
-                showLoggedIn(localStorage.getItem("userName"));
+                showSessionUnavailable();
                 return;
               }
 
               const data = await response.json();
-
-              const name =
-                      localStorage.getItem("userName") ||
-                      data.usuario?.nome;
-
-              showLoggedIn(name);
+              showLoggedIn(
+                  data.usuario?.nome || localStorage.getItem("userName"),
+                  data.usuario?.perfil
+              );
             })
             .catch(() => {
-              // Se o backend estiver indisponível, o usuário ainda pode sair.
-              showLoggedIn(localStorage.getItem("userName"));
+              showSessionUnavailable();
             });
   })();
 </script>

@@ -478,16 +478,22 @@
     emptyProducts.hidden = visibleCount !== 0;
   }
 
+  function updateFilterButtons() {
+    filterGroup.querySelectorAll(".filter-button").forEach(button => {
+      const active = button.dataset.filter === activeFilter;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+  }
+
   filterGroup.addEventListener("click", event => {
-    const button = event.target.closest(".filter-button");
-    if (!button) return;
-      activeFilter = button.dataset.filter;
-      document.querySelectorAll(".filter-button").forEach(filterButton => {
-        const active = filterButton === button;
-        filterButton.classList.toggle("is-active", active);
-        filterButton.setAttribute("aria-pressed", String(active));
-      });
-      applyFilters();
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest("button.filter-button[data-filter]");
+    if (!button || button.parentElement !== filterGroup) return;
+    activeFilter = button.dataset.filter || "all";
+    updateFilterButtons();
+    applyFilters();
   });
   document.getElementById("productSort").addEventListener("change", applyFilters);
 
@@ -633,9 +639,8 @@
         });
         if (activeFilter !== "all" && !categoriesResult.categorias.some(category => category.slug === activeFilter)) {
           activeFilter = "all";
-          allFilter.classList.add("is-active");
-          allFilter.setAttribute("aria-pressed", "true");
         }
+        updateFilterButtons();
       }
       result.produtos.forEach((entry, index) => {
         products[entry.slug] = {
@@ -656,8 +661,8 @@
       persistCart();
       renderCart();
       applyFilters();
-    } catch {
-      showFeedback("Catálogo online indisponível; exibindo os produtos já carregados.");
+    } catch (error) {
+      showFeedback("Catálogo online indisponível; exibindo os produtos já carregados. " + error.message);
     }
   }
 

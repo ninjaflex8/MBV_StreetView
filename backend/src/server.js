@@ -14,6 +14,11 @@ const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:5500,http:
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
+if (process.env.NODE_ENV !== "production") {
+  for (const origin of ["http://localhost:63342", "http://127.0.0.1:63342"]) {
+    if (!allowedOrigins.includes(origin)) allowedOrigins.push(origin);
+  }
+}
 
 app.use(cors({
   origin: (origin, callback) => {

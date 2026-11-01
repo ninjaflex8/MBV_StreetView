@@ -176,9 +176,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .checkout-button:disabled { opacity: .4; cursor: not-allowed; }
 .continue-shopping { width: 100%; min-height: 44px; margin-top: 11px; padding: 11px; border: 0; color: var(--color-secondary); background: transparent; font-size: 12px; font-weight: 700; }
 .cart-feedback { min-height: 20px; margin: 5px 0 0; color: var(--color-accent); font-size: 12px; text-align: center; }
-body.login-page, body.register-page { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 28px; background: var(--color-background); color: var(--color-primary); }
-.account-page-layout { width: min(1120px, 100%); display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr); align-items: center; gap: clamp(24px, 5vw, 68px); margin-block: auto; }
-.account-page-layout .page-carousel-frame { height: min(70vh, 560px); min-height: 360px; }
+body.login-page, body.register-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 28px; background: var(--color-background); color: var(--color-primary); }
 .login-container, .register-container { width: min(440px, 100%); padding: 38px; margin: 0 auto; border: 1px solid var(--color-border); background: var(--color-surface); box-shadow: var(--shadow); }
 .login-container h1, .register-container h1 { margin: 0 0 10px; font: 700 34px var(--font-display); letter-spacing: -.06em; }
 .register-container p, .subtitle { color: var(--color-secondary); font-size: 12px; line-height: 1.7; }
@@ -227,9 +225,6 @@ input:focus, textarea:focus, select:focus { outline: 3px solid var(--color-accen
   .hero-visual { width: calc(100% - 14px); justify-self: start; margin-left: 0; }
   .hero-image-frame { height: min(105vw, 480px); }
   .hero-watermark { left: 12%; bottom: 32%; font-size: 220px; }
-  .account-page-layout { grid-template-columns: 1fr; gap: 20px; }
-  .account-page-layout .page-carousel-frame { height: clamp(200px, 55vw, 320px); min-height: 0; }
-  .account-page-layout .login-container, .account-page-layout .register-container { width: 100%; }
   .admin-page-carousel { margin-bottom: 26px; }
   .shop-section { padding-top: 68px; padding-bottom: 70px; }
   .section-heading { align-items: start; flex-direction: column; gap: 14px; margin-bottom: 27px; }

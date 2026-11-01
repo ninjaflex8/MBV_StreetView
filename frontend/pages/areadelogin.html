@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Entre na sua conta MBV StreetView.">
+    <meta name="theme-color" content="#F5F3EE">
     <title>Entrar | MBV StreetView</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="login-page">
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-<main class="login-container" id="conteudo" tabindex="-1">
+<main id="conteudo" class="login-container" tabindex="-1">
+    <p class="eyebrow">MBV STREETVIEW / SUA CONTA</p>
     <h1>Entrar</h1>
 
     <form id="loginForm" autocomplete="on">
@@ -38,120 +39,22 @@
             >
         </div>
 
-        <label
-                class="remember-email"
-                for="rememberEmail"
-                style="display:flex;align-items:center;gap:9px;margin:0 0 18px;cursor:pointer;"
-        >
-            <input
-                    type="checkbox"
-                    id="rememberEmail"
-                    style="width:auto;margin:0;"
-            >
+        <label class="remember-email" for="rememberEmail">
+            <input type="checkbox" id="rememberEmail">
             <span>Lembrar meu e-mail neste dispositivo</span>
         </label>
 
         <button id="loginButton" type="submit">Entrar</button>
-
-        <div
-                class="message"
-                id="loginMessage"
-                role="status"
-                aria-live="polite"
-        ></div>
+        <p class="message" id="loginMessage" role="status" aria-live="polite" aria-atomic="true"></p>
     </form>
 
     <a href="paginaderegistro.html" class="register-link">
-        Não tem uma conta? Registre-se
+        Não tem uma conta? Cadastre-se
     </a>
+    <a href="../index.html" class="register-link">Voltar à loja</a>
 </main>
 
-<script src="../js/config.js"></script>
-<script>
-    const loginForm = document.getElementById("loginForm");
-    const loginMessage = document.getElementById("loginMessage");
-    const loginButton = document.getElementById("loginButton");
-    const loginEmail = document.getElementById("loginEmail");
-    const loginSenha = document.getElementById("loginSenha");
-    const rememberEmail = document.getElementById("rememberEmail");
-
-    const rememberedEmail = localStorage.getItem("rememberedEmail");
-
-    if (rememberedEmail) {
-        loginEmail.value = rememberedEmail;
-        rememberEmail.checked = true;
-    }
-
-    function showLoginMessage(text, type = "error") {
-        loginMessage.textContent = text;
-        loginMessage.className = `message ${type}`;
-    }
-
-    loginForm.addEventListener("submit", async function(event) {
-        event.preventDefault();
-
-        const email = loginEmail.value.trim();
-        const senha = loginSenha.value;
-
-        if (rememberEmail.checked) {
-            localStorage.setItem("rememberedEmail", email);
-        } else {
-            localStorage.removeItem("rememberedEmail");
-        }
-
-        loginButton.disabled = true;
-        showLoginMessage("Verificando seus dados...", "success");
-
-        try {
-            const resposta = await fetch(
-                `${window.MBV_API_URL}/auth/login`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        ...window.MBV_API_HEADERS
-                    },
-                    body: JSON.stringify({ email, senha })
-                }
-            );
-
-            const resultado = await resposta.json();
-
-            if (!resposta.ok) {
-                showLoginMessage(
-                    resultado.message || "Não foi possível entrar."
-                );
-                return;
-            }
-
-            if (!resultado.token || !resultado.usuario) {
-                showLoginMessage(
-                    "O servidor não retornou os dados de autenticação esperados."
-                );
-                return;
-            }
-
-            localStorage.setItem("authToken", resultado.token);
-            localStorage.setItem("userName", resultado.usuario.nome);
-            localStorage.setItem("userEmail", resultado.usuario.email);
-
-            showLoginMessage(
-                "Login realizado com sucesso! Redirecionando...",
-                "success"
-            );
-
-            setTimeout(() => {
-                window.location.href = "../index.html";
-            }, 700);
-
-        } catch (erro) {
-            showLoginMessage(
-                "Não foi possível conectar ao servidor. Confira se o backend está rodando."
-            );
-        } finally {
-            loginButton.disabled = false;
-        }
-    });
-</script>
+<script src="../js/config.js" defer></script>
+<script src="../js/login.js" defer></script>
 </body>
 </html>
