@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Crie sua conta MBV StreetView.">
+    <meta name="theme-color" content="#F5F3EE">
     <title>Criar conta | MBV StreetView</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="register-page">
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
-<main class="register-container" id="conteudo" tabindex="-1">
+<div class="account-page-layout">
+    <section class="page-carousel" data-carousel data-image-base="../imagens/" role="region" aria-roledescription="carrossel" aria-label="Destaques da coleção MBV">
+        <div class="page-carousel-frame">
+            <img data-carousel-image src="../imagens/camisa_brooklyn.jpg" alt="Camiseta Brooklyn da coleção MBV StreetView">
+            <span class="page-carousel-count" data-carousel-count aria-hidden="true">MBV / 001</span>
+            <button class="carousel-control carousel-previous" data-carousel-previous type="button" aria-label="Ver imagem anterior do destaque">‹</button>
+            <button class="carousel-control carousel-next" data-carousel-next type="button" aria-label="Ver próxima imagem do destaque">›</button>
+            <button class="carousel-toggle" data-carousel-toggle type="button" aria-label="Pausar carrossel">Ⅱ</button>
+            <div class="page-carousel-progress" data-carousel-progress role="progressbar" aria-label="Tempo até a próxima imagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+        </div>
+        <p class="visually-hidden" data-carousel-status role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
+<main id="conteudo" class="register-container" tabindex="-1">
+    <p class="eyebrow">MBV STREETVIEW / SUA CONTA</p>
     <h1>Criar conta</h1>
-    <p>Preencha os campos abaixo para criar sua conta.</p>
-    <form id="registerForm" autocomplete="on">
+    <p>Preencha os campos para criar sua conta de cliente.</p>
+    <form id="registerForm">
         <div class="form-group">
             <label for="nome">Nome completo</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome" maxlength="30" autocomplete="name" required>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome" minlength="3" maxlength="30" autocomplete="name" required>
         </div>
         <div class="form-group">
             <label for="email">E-mail</label>
@@ -23,97 +36,24 @@
         </div>
         <div class="form-group">
             <label for="senha">Senha</label>
-            <input type="password" id="senha" name="senha" placeholder="No mínimo 6 caracteres" minlength="6" maxlength="50" autocomplete="new-password" aria-describedby="senhaHint" required>
-            <p class="field-hint" id="senhaHint">Use de 6 a 50 caracteres.</p>
+            <input type="password" id="senha" name="senha" placeholder="De 6 a 50 caracteres" minlength="6" maxlength="50" autocomplete="new-password" required>
         </div>
         <div class="form-group">
             <label for="confirmarSenha">Confirmar senha</label>
             <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Repita a senha" minlength="6" maxlength="50" autocomplete="new-password" required>
         </div>
-        <div class="button-group" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:20px;">
+        <div class="form-actions">
             <button id="cadastro_BTN" type="submit">Cadastrar</button>
-            <button id="login_BTN" type="button" hidden onclick="window.location.href='areadelogin.html'">Ir para login</button>
+            <a id="login_BTN" class="button button-dark" href="areadelogin.html" hidden>Ir para login</a>
         </div>
-        <div class="msg" id="message" role="status" aria-live="polite"></div>
+        <p class="msg" id="message" role="status" aria-live="polite" aria-atomic="true"></p>
     </form>
+    <a href="../index.html" class="register-link">Voltar à loja</a>
 </main>
+</div>
 
-<script src="../js/config.js"></script>
-<script>
-    const registerForm = document.getElementById('registerForm');
-    const messageBox = document.getElementById('message');
-    const cadastroButton = document.getElementById('cadastro_BTN');
-    const loginButton = document.getElementById('login_BTN');
-
-    function showMessage(text, type = 'error') {
-        messageBox.textContent = text;
-        messageBox.className = `msg ${type}`;
-    }
-
-    registerForm.addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const nome = document.getElementById('nome').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const senha = document.getElementById('senha').value;
-        const confirmarSenha = document.getElementById('confirmarSenha').value;
-
-        if (nome.length < 3) {
-            showMessage('Informe um nome com pelo menos 3 caracteres.');
-            return;
-        }
-
-        if (nome.length > 30) {
-            showMessage('O nome deve ter no máximo 30 caracteres.');
-            return;
-        }
-
-        if (email.length > 100) {
-            showMessage('O e-mail deve ter no máximo 100 caracteres.');
-            return;
-        }
-
-        if (senha.length < 6 || senha.length > 50) {
-            showMessage('A senha deve ter entre 6 e 50 caracteres.');
-            return;
-        }
-
-        if (senha !== confirmarSenha) {
-            showMessage('As senhas não coincidem.');
-            return;
-        }
-
-        cadastroButton.disabled = true;
-        showMessage('Enviando cadastro...', 'success');
-
-        try {
-            const resposta = await fetch(`${window.MBV_API_URL}/auth/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...window.MBV_API_HEADERS
-                },
-                body: JSON.stringify({ nome, email, senha })
-            });
-
-            const resultado = await resposta.json();
-
-            if (!resposta.ok) {
-                showMessage(resultado.message || 'Não foi possível realizar o cadastro.');
-                return;
-            }
-
-            showMessage('Cadastro realizado com sucesso! Agora entre com seu e-mail e senha.', 'success');
-            cadastroButton.hidden = true;
-            loginButton.hidden = false;
-            registerForm.reset();
-            loginButton.focus();
-        } catch (erro) {
-            showMessage('Não foi possível conectar ao servidor. Confira se o backend está rodando.');
-        } finally {
-            cadastroButton.disabled = false;
-        }
-    });
-</script>
+<script src="../js/config.js" defer></script>
+<script src="../js/carousel.js" defer></script>
+<script src="../js/register.js" defer></script>
 </body>
 </html>

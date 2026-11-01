@@ -1,16 +1,24 @@
-
 const db = require("../database/connection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
+const MAX_PASSWORD_LENGTH = 50;
+const MAX_PASSWORD_BYTES = 72;
+
+function senhaValida(senha) {
+  return senha.length >= 6 &&
+      senha.length <= MAX_PASSWORD_LENGTH &&
+      Buffer.byteLength(senha, "utf8") <= MAX_PASSWORD_BYTES;
+}
 
 exports.register = async (req, res) => {
   try {
     const { nome, email, senha } = req.body || {};
 
     if (
-      typeof nome !== "string" ||
-      typeof email !== "string" ||
-      typeof senha !== "string"
+        typeof nome !== "string" ||
+        typeof email !== "string" ||
+        typeof senha !== "string"
     ) {
       return res.status(400).json({
         message: "Informe nome, e-mail e senha."
@@ -27,31 +35,27 @@ exports.register = async (req, res) => {
     }
 
     if (
-      !emailLimpo ||
-      emailLimpo.length > 100 ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpo)
+        !emailLimpo ||
+        emailLimpo.length > 100 ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpo)
     ) {
       return res.status(400).json({
         message: "Informe um e-mail válido, com até 100 caracteres."
       });
     }
 
-    if (senha.length < 6 || senha.length > 50) {
+    if (!senhaValida(senha)) {
       return res.status(400).json({
-        message: "A senha deve ter entre 6 e 50 caracteres."
+        message: "A senha deve ter entre 6 e 50 caracteres e até 72 bytes."
       });
     }
 
     const senhaHash = await bcrypt.hash(senha, 10);
-    const sql = `
-      INSERT INTO usuarios (nome, email, senha, perfil)
-      VALUES (?, ?, ?, 'cliente')
-    `;
-    const [result] = await db.promise().query(sql, [
-      nomeLimpo,
-      emailLimpo,
-      senhaHash
-    ]);
+    const [result] = await db.promise().query(
+        `INSERT INTO usuarios (nome, email, senha, perfil)
+         VALUES (?, ?, ?, 'cliente')`,
+        [nomeLimpo, emailLimpo, senhaHash]
+    );
 
     return res.status(201).json({
       message: "Usuário cadastrado com sucesso.",
@@ -83,10 +87,12 @@ exports.login = async (req, res) => {
       typeof email !== "string" ||
       typeof senha !== "string" ||
       !email.trim() ||
-      !senha
+      !senha ||
+      senha.length > MAX_PASSWORD_LENGTH ||
+      Buffer.byteLength(senha, "utf8") > MAX_PASSWORD_BYTES
   ) {
     return res.status(400).json({
-      message: "Informe e-mail e senha."
+      message: "Informe um e-mail e uma senha válidos."
     });
   }
 
@@ -99,12 +105,13 @@ exports.login = async (req, res) => {
 
   try {
     const emailLimpo = email.trim().toLowerCase();
-    const sql = `
-      SELECT id, nome, email, senha, perfil
-      FROM usuarios
-      WHERE email = ?
-    `;
-    const [usuarios] = await db.promise().query(sql, [emailLimpo]);
+    const [usuarios] = await db.promise().query(
+        `SELECT id, nome, email, senha, perfil
+         FROM usuarios
+         WHERE email = ?
+         LIMIT 1`,
+        [emailLimpo]
+    );
 
     if (usuarios.length === 0) {
       return res.status(401).json({
@@ -122,12 +129,9 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      {
-        id: usuario.id,
-        email: usuario.email
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "2h" }
+        { id: usuario.id, email: usuario.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "2h", algorithm: "HS256" }
     );
 
     return res.status(200).json({

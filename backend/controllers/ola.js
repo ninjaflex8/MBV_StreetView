@@ -1,7 +1,3 @@
-exports.register = (req,res)=>{
-  console.log("Olá controller");
-  res.send("Bem vindo, ")
-
- 
-
-}
+exports.register = (_req, res) => {
+  return res.status(200).send("Bem-vindo à API da MBV StreetView.");
+};

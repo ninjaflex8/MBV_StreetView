@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------------------#
+#        Discover additional configuration options in our documentation         #
+#               https://www.jetbrains.com/help/qodana/github.html               #
+#-------------------------------------------------------------------------------#
+
 name: Qodana
 on:
   workflow_dispatch:
@@ -24,13 +29,22 @@ jobs:
           node-version: 22
       - name: Validate JavaScript syntax
         run: find backend frontend/js -type f -name '*.js' -print0 | xargs -0 -r -n1 node --check
+      - name: Install backend dependencies
+        run: npm ci --prefix backend
+      - name: Run backend tests
+        run: npm test --prefix backend
       - name: Qodana Scan (requires QODANA_TOKEN)
         if: ${{ env.QODANA_TOKEN != '' }}
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         uses: JetBrains/qodana-action@v2026.1
         with:
+          # When pr-mode is set to true, Qodana analyzes only the files that have been changed
           pr-mode: false
           use-caches: true
           post-pr-comment: true
           use-annotations: true
+          # Upload Qodana results (SARIF, other artifacts, logs) as an artifact to the job
           upload-result: false
+          # quick-fixes available in Ultimate and Ultimate Plus plans
           push-fixes: 'none'

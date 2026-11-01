@@ -9,12 +9,4 @@ const connection = mysql.createConnection({
   database: process.env.DB_NAME || "MBV_Shop"
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error("Erro ao conectar ao MySQL:", err.message);
-    return;
-  }
-  console.log("Conectado ao MySQL com sucesso!");
-});
-
 module.exports = connection;

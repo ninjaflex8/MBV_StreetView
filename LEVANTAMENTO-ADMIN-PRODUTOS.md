@@ -1,6 +1,6 @@
 # Levantamento — Menu administrativo + Cadastro/Listagem de produtos
 
-> **Status:** documento de análise. Nenhum código de aplicação foi alterado para produzi-lo.
+> **Status:** levantamento original concluído; o apêndice de implementação no fim registra as decisões e mudanças posteriores. As seções de diagnóstico descrevem o estado observado antes da implementação.
 
 ## 1. Requisito
 
@@ -44,7 +44,7 @@
   - **ignora `data.usuario.perfil`** (`index.html:590-596`);
   - não possui menu administrativo;
   - mostra apenas “Olá, nome” e “Sair”.
-- `frontend/js/login.js` e `frontend/js/register.js` existem, mas o login real é inline e o `register.js` está vazio. São arquivos não utilizados no fluxo atual.
+- O frontend usa `frontend/js/login.js` e `frontend/js/register.js`; a URL da API compartilhada fica em `frontend/js/config.js`.
 
 ### 2.3 Produtos — totalmente estáticos
 
@@ -64,9 +64,9 @@
 ### 2.5 Infraestrutura
 
 - `backend/src/server.js` monta `/auth`, `/admin` e `/health`.
-- `frontend/js/config.js` aponta para uma URL de desenvolvimento ngrok.
+- `frontend/js/config.js` aponta para `http://localhost:3000` no desenvolvimento; para publicar, é necessário definir a URL HTTPS real da API.
 - Frontend é estático, sem build.
-- CORS está aberto (`app.use(cors())`).
+- CORS usa a lista de origens configurada em `CORS_ORIGINS` (com origens locais como padrão de desenvolvimento).
 
 ## 3. Lacunas em relação ao requisito
 
@@ -296,31 +296,19 @@ A segunda opção atende melhor ao texto “ao acessar a área logada, apresenta
 10. **Escopo de estoque, tamanhos e cores**  
     O `copilot-instructions.md` prevê essas funcionalidades, mas elas **não fazem parte deste requisito**. Recomenda-se não incluí-las agora para evitar aumento desnecessário de escopo.
 
-## 8. Decisões que precisam ser fechadas antes da implementação
+## 8. Decisões fechadas para esta implementação
 
-1. **Onde ficará o painel?**
-   - Página separada `pages/admin.html` (recomendado, separa a experiência do cliente).
-   - Ou menu administrativo dentro do `index.html`.
+1. **Onde ficará o painel?** Página separada `frontend/pages/admin.html`, com link mostrado somente após `/auth/me` confirmar o perfil `admin`.
 
-2. **A listagem será apenas administrativa ou também alimentará a loja pública?**
-   - Fase 1: apenas admin.
-   - Fase 2: catálogo público dinâmico, com refatoração da vitrine e da sacola.
+2. **A listagem alimentará a loja pública?** Sim. A API pública fornece os produtos ativos; a vitrine preserva os cards e mantém seus dados locais como fallback quando a API não responde.
 
-3. **Categorias:**
-   - `roupas` e `acessorios` (como no requisito), ou
-   - `camisetas`, `acessorios` e `jaquetas` (como na loja atual), ou
-   - categoria principal + subcategoria.
+3. **Categorias:** `camisetas`, `acessorios` e `jaquetas`, preservando os filtros já existentes; administradores podem criar categorias adicionais.
 
-4. **Imagem:**
-   - URL externa no MVP (recomendado), ou
-   - upload de arquivo com nova dependência e armazenamento.
+4. **Imagem:** URL HTTP/HTTPS; upload não faz parte deste MVP.
 
-5. **Campos do produto:**
-   - Mínimo: nome, descrição, preço, categoria, imagem, ativo.
-   - Incluir tamanho/cor/estoque agora ou deixar para uma próxima etapa?
+5. **Campos do produto:** nome, descrição, preço, categoria, imagem, status, variações de tamanho/cor e estoque. Tamanhos, cores e quantidades reais não são presumidos para os produtos antigos.
 
-6. **Após o login, o admin deve ser redirecionado automaticamente para o painel ou apenas ver o link no `index.html`?**  
-   Recomendação: exibir o link no `index.html` e permitir acesso ao painel; redirecionamento automático pode ser adicionado depois.
+6. **Após o login:** o administrador permanece na loja e vê o link para o painel; não há redirecionamento automático.
 
 ## 9. Estimativa aproximada
 
@@ -359,4 +347,18 @@ O projeto **já possui a base de autenticação e autorização por perfil**, in
 - a **listagem e o formulário de cadastro**;
 - a decisão sobre **integração com a vitrine pública** e **categorias**.
 
-Nenhuma alteração de código de aplicação foi realizada neste levantamento.
+## 12. Apêndice — implementação do comércio
+
+Implementação aplicada em 31/10/2026, preservando login, cadastro, autenticação JWT, identidade visual e estrutura existente da sacola:
+
+- Migração `backend/database/migrations/002-create-commerce-tables.sql`: cria categorias, produtos, variações, estoque, movimentações, pedidos e itens; sem apagar ou recriar o schema. Inclui cadastro idempotente dos oito produtos existentes, preservando seus slugs usados pela sacola. Como não havia informação confiável de tamanho, cor ou quantidade, esses dados precisam ser cadastrados pelo administrador; os produtos não ficam disponíveis para compra até existir uma variação com estoque.
+- `backend/controllers/commerceController.js`, `backend/routes/adminRoutes.js`, `backend/routes/productRoutes.js`, `backend/routes/orderRoutes.js` e `backend/src/server.js`: adicionam catálogo público, gerenciamento administrativo protegido, dashboard, categorias, variações, ajustes de estoque, histórico e pedidos. O cliente só lista os próprios pedidos.
+- `frontend/pages/admin.html`, `frontend/js/admin.js` e `frontend/css/style.css`: painel independente com indicadores de banco, cadastro/edição/desativação, categorias, variações, ajustes e confirmação de pedido.
+- `frontend/js/store.js` e `frontend/index.html`: catálogo consulta a API mantendo os cards, filtros, ordenação e sacola; link administrativo depende do perfil retornado pelo `/auth/me`; inclusão de pedido usa a sacola atual e preserva o resumo copiável.
+- `frontend/pages/pedidos.html` e `frontend/js/orders.js`: consulta autenticada dos pedidos do próprio cliente.
+- Pedidos são criados `pendentes`; nenhuma integração de pagamento é simulada. A confirmação administrativa baixa o estoque numa transação com `SELECT ... FOR UPDATE`, registra movimentações e só aceita pedidos pendentes. A chave de idempotência e a restrição única impedem repetir a criação de um pedido já recebido.
+- `README.md`: descreve ordem da migração, endpoints, operação e limitações.
+
+**Validação realizada:** `npm test` executou 8 testes de autenticação, autorização e validação de payloads; todos passaram. A sintaxe dos scripts JavaScript do backend e frontend foi verificada com `node --check`.
+
+**Pendente antes de produção:** executar a migração após backup e confirmar que `usuarios.id` é `BIGINT UNSIGNED`, como validado preventivamente pelo script e pelo schema compartilhado; criar tamanhos/cores e estoque reais; validar as transações e as chaves estrangeiras contra a versão/schema reais do MySQL; testar os fluxos completos em navegador. Pagamento, frete, cancelamento e estorno continuam fora do MVP.

@@ -1,159 +1,82 @@
 # MBV StreetView
 
-Loja virtual de streetwear com frontend estático em HTML, CSS e JavaScript, API de autenticação em Node.js/Express e persistência de usuários em MySQL.
+Loja estática em HTML, CSS e JavaScript, com API de autenticação em Node.js/Express e banco MySQL. A identidade visual atual usa fundo creme/branco, carvão e detalhes em verde-oliva.
 
-## Funcionalidades atuais
+## Estrutura
 
-- Catálogo estático com oito produtos, filtros por categoria e ordenação por preço ou nome.
-- Sacola mantida no `localStorage`, com ajuste de quantidades, remoção de itens e cópia do resumo do pedido.
-- Cadastro e login de usuários pela API.
-- Senhas armazenadas com bcrypt e autenticação por JWT com validade de duas horas.
-- Consulta de sessão autenticada em `GET /auth/me`.
-- Perfis `cliente` e `admin`, com verificação da permissão atual no banco e rota administrativa de teste.
-- Layout responsivo com identidade visual branca e roxa, navegação móvel e melhorias para teclado e leitores de tela.
+- `frontend/index.html`: vitrine, carrossel manual, filtros e sacola local.
+- `frontend/pages`: páginas de login, cadastro, administração e consulta de pedidos.
+- `frontend/css/style.css`: estilos, pontos de quebra e preferências de movimento reduzido.
+- `frontend/js/config.js`: endereço da API e cabeçalhos públicos usados pelo frontend.
+- `frontend/js/store.js`: carrossel, filtros, catálogo dinâmico com fallback estático e sacola local.
+- `frontend/js/admin.js` e `frontend/pages/admin.html`: painel administrativo autenticado.
+- `frontend/js/orders.js` e `frontend/pages/pedidos.html`: consulta dos pedidos do próprio cliente.
+- `backend/src/server.js`: servidor Express, CORS e rotas.
+- `backend/controllers`: cadastro e login.
+- `backend/controllers/commerceController.js`: produtos, categorias, estoque, dashboard e pedidos.
+- `backend/middleware`: autenticação JWT e autorização por perfil.
+- `backend/database`: conexão MySQL e migrações SQL.
+- `backend/routes`: endpoints públicos de catálogo, pedidos autenticados e operações administrativas.
+- `backend/tests/authProfiles.test.js`: testes HTTP de cadastro, login, sessão e permissões.
 
-O catálogo e os preços são definidos no frontend. A sacola ainda não cria pedidos no backend nem processa pagamentos, calcula frete ou reserva estoque.
+## Requisitos e configuração local
 
-## Tecnologias
+Use Node.js 20 ou superior e MySQL. Crie `backend/.env` a partir do exemplo e ajuste os valores para o banco local. Não versionar `.env` nem colocar segredos no frontend.
 
-- Frontend: HTML, CSS e JavaScript sem etapa de build.
-- Backend: Node.js, Express, bcrypt, jsonwebtoken e mysql2.
-- Banco de dados: MySQL.
-- Publicação do frontend: GitHub Pages ou Netlify.
-
-## Estrutura do projeto
-
-```text
-frontend/
-  index.html                Página principal da loja
-  css/style.css             Estilos e layout responsivo
-  imagens/                  Imagens dos produtos e logotipo
-  js/config.js              URL e cabeçalhos da API usados pelo frontend
-  js/store.js               Catálogo, filtros e sacola local
-  pages/areadelogin.html    Formulário de login
-  pages/paginaderegistro.html Formulário de cadastro
-backend/
-  src/server.js             Inicialização da API e rota de saúde
-  controllers/               Lógica de cadastro e login
-  routes/authRoutes.js       Rotas de autenticação
-  middleware/                Validação do JWT
-  database/connection.js     Conexão MySQL
-  package.json               Dependências e comandos do backend
-.github/workflows/pages.yml  Publicação pelo GitHub Pages
-netlify.toml                 Configuração de publicação pelo Netlify
-```
-
-## Requisitos
-
-- Node.js e npm.
-- MySQL acessível pelo backend.
-- Um banco chamado `MBV_Shop` e uma tabela `usuarios` compatível com as consultas do projeto.
-
-Os arquivos SQL existentes contêm consultas de exemplo; eles **não criam o banco nem a tabela**. Verifique o schema do seu MySQL antes de executar a API. A conexão espera as colunas `id`, `nome`, `email` e `senha`, com um índice único para `email`.
-
-## Configuração e execução local
-
-1. Crie `backend/.env` localmente. Não versione esse arquivo:
-
-   ```env
-   PORT=3000
-   DB_HOST=localhost
-   DB_PORT=3306
-   DB_USER=seu_usuario_mysql
-   DB_PASSWORD=sua_senha_mysql
-   DB_NAME=MBV_Shop
-   JWT_SECRET=gere_um_segredo_longo_e_aleatorio
-   ```
-
-   O backend tem valores padrão locais para `PORT`, host, porta, usuário e banco. Configure todas as variáveis explicitamente para outros ambientes. `JWT_SECRET` é obrigatório para emitir e validar tokens. Não use a conta `root` sem senha em ambientes publicados.
-
-2. Instale as dependências e inicie o backend:
-
-   ```powershell
-   cd backend
-   npm ci
-   npm run dev
-   ```
-
-   Para iniciar sem o modo de desenvolvimento, use `npm start`.
-
-3. Confirme que a API está ativa acessando `http://localhost:3000/health`. A resposta esperada é:
-
-   ```json
-   { "status": "ok" }
-   ```
-
-   Essa rota verifica apenas se o servidor HTTP respondeu; não confirma a conexão com o MySQL.
-
-4. Configure a URL da API em `frontend/js/config.js`. Para testar a loja localmente, use `http://localhost:3000` como URL base. O arquivo está atualmente configurado com um endereço de túnel ngrok de desenvolvimento; não o trate como endereço de produção.
-
-5. Sirva a pasta `frontend/` com um servidor estático local e abra a página principal. O projeto não define um servidor de frontend nem uma etapa de build.
-
-## API de autenticação
-
-As rotas de autenticação são montadas sob `/auth`; as rotas administrativas e de saúde usam os caminhos indicados:
-
-| Método | Rota | Acesso | Descrição |
-|---|---|---|---|
-| `POST` | `/auth/register` | Público | Cadastra usuário com nome de 3 a 30 caracteres, e-mail válido e senha de 6 a 50 caracteres. |
-| `POST` | `/auth/login` | Público | Valida credenciais e retorna um JWT e os dados básicos do usuário. |
-| `GET` | `/auth/me` | JWT obrigatório | Retorna os dados básicos e o perfil atualizado da sessão. |
-| `GET` | `/auth/teste` | Público | Rota auxiliar de teste. |
-| `GET` | `/admin/teste` | JWT + perfil `admin` | Rota de validação da autorização administrativa. |
-| `GET` | `/health` | Público | Verifica se o servidor HTTP está ativo. |
-
-O cadastro retorna `409` quando o e-mail já está registrado. Erros de validação retornam `400`; credenciais inválidas ou token ausente/inválido retornam `401`.
-
-## Perfis e rotas administrativas
-
-A tabela `usuarios` precisa ter a coluna `perfil`. Para adicionar essa coluna preservando os registros, execute a migração depois de confirmar que a tabela `MBV_Shop.usuarios` existente contém `id`, `nome`, `email` e `senha`:
+No PowerShell, na raiz do repositório:
 
 ```powershell
-Get-Content .\backend\database\migrations\001-add-usuario-perfil.sql | mysql -u seu_usuario_mysql -p MBV_Shop
-```
-
-A migração interrompe a execução se a tabela estiver ausente ou se uma coluna `perfil` existente contiver valores diferentes de `cliente` e `admin`. Usuários anteriores e novos cadastros ficam como `cliente` por padrão; o backend ignora qualquer perfil enviado no cadastro.
-
-Promova uma conta existente manualmente: abra `backend/database/migrations/promote-user-to-admin.sql`, substitua o marcador pelo e-mail correto da conta, revise o arquivo e execute-o:
-
-```powershell
-Get-Content .\backend\database\migrations\promote-user-to-admin.sql | mysql -u seu_usuario_mysql -p MBV_Shop
-```
-
-O arquivo não contém e-mail pré-preenchido nem cria rota pública de promoção. A resposta de login inclui `usuario.perfil`. O endpoint `GET /auth/me` consulta e retorna o perfil atual do banco. A rota `GET /admin/teste` exige JWT válido e perfil `admin`; a autorização sempre usa o perfil lido do MySQL, nunca um valor do cliente ou do token.
-
-Execute os testes automatizados do backend (perfis, cadastro e validação de autenticação) com:
-
-```powershell
-cd backend
+if (-not (Test-Path backend\.env)) { Copy-Item backend\.env.example backend\.env }
+Set-Location backend
+npm ci
 npm test
+npm run dev
 ```
 
-## Frontend e configuração da API
+O backend só começa a escutar depois de estabelecer a conexão MySQL. A API fica em `http://localhost:3000`; a rota `GET /health` indica que o servidor está respondendo, mas não substitui a confirmação da conexão com o banco no log de inicialização. Em `NODE_ENV=production`, o servidor exige configurações explícitas de banco, `CORS_ORIGINS` e um `JWT_SECRET` com pelo menos 32 caracteres.
 
-`frontend/js/config.js` define `window.MBV_API_URL` e cabeçalhos comuns usados pelo login, cadastro e validação da sessão. Para desenvolvimento, configure a URL para o backend local. Para uso público, substitua-a pelo endereço HTTPS de uma API publicada e configure essa API para aceitar requisições do domínio do frontend.
+Sirva o diretório `frontend` por um servidor estático local (por exemplo, Live Server em `http://localhost:5500`). Abrir as páginas por `file://` pode impedir as requisições da API. Para outra origem local, ajuste `CORS_ORIGINS` em `backend/.env`.
 
-O endereço ngrok atualmente presente nessa configuração serve apenas para desenvolvimento e depende do túnel e do computador que executa o backend. O cabeçalho `ngrok-skip-browser-warning` existe para contornar a página de aviso do túnel gratuito; remova-o quando não usar ngrok.
+## Banco de dados
 
-O token e os dados básicos da sessão ficam no `localStorage` do navegador. A opção “Lembrar meu e-mail” também usa `localStorage`; não armazena a senha.
+As migrações não criam nem recriam o banco ou a tabela `usuarios`. Antes de executá-las, confirme que o schema `MBV_Shop` e a tabela `usuarios` existem e faça um backup. No MySQL Workbench, abra e execute `backend/database/migrations/001-add-usuario-perfil.sql` com o usuário de desenvolvimento. Se o schema tiver outro nome, ajuste o `USE MBV_Shop;` da migração antes de executá-la.
 
-Como o token é acessível a JavaScript no navegador, uma vulnerabilidade de XSS pode expor a sessão. O frontend deve continuar evitando HTML dinâmico não confiável; antes de produção, avalie autenticação por cookie `HttpOnly`, `Secure` e `SameSite` junto com as proteções contra CSRF adequadas. O backend usa CORS amplo atualmente e não limita tentativas de login: restrinja as origens aos domínios publicados e implemente limitação de requisições para autenticação antes de disponibilizar a API publicamente.
+Depois de confirmar `SHOW CREATE TABLE usuarios` (especialmente o tipo de `usuarios.id`) e fazer um backup, execute `backend/database/migrations/002-create-commerce-tables.sql`. A migração cria categorias, produtos, variações, estoque, movimentações e pedidos e cadastra os oito produtos que já existiam na vitrine, sem duplicá-los quando executada novamente. Os produtos preservam preços, categorias e caminhos das imagens; como o estoque e as combinações reais de tamanho/cor não estavam registrados no projeto, as variações e quantidades **não são inventadas**. Cadastre as combinações reais e o estoque no painel antes de habilitar vendas. A migração verifica previamente se `usuarios.id` é `BIGINT UNSIGNED`, compatível com as colunas `usuario_id`; se o tipo for diferente, interrompe antes de criar as tabelas para que a migração possa ser ajustada com segurança.
 
-## Publicação
+Para promover uma conta existente a administradora, substitua `SUBSTITUA_PELO_EMAIL_DO_PROPRIETARIO` em `backend/database/migrations/promote-user-to-admin.sql` pelo e-mail escolhido e execute o arquivo manualmente. Não existe endpoint público para conceder perfil administrativo.
 
-### GitHub Pages
+## API atual
 
-O workflow `.github/workflows/pages.yml` publica `frontend/` em pushes para as branches `main` e `master`, ou quando executado manualmente em **Actions**. Nas configurações do repositório, defina GitHub Actions como origem de publicação do Pages. O backend Node.js e o MySQL não são publicados por esse workflow.
+| Método | Caminho | Acesso | Uso |
+|---|---|---|---|
+| `POST` | `/auth/register` | Público | Cadastro; o perfil é sempre `cliente` |
+| `POST` | `/auth/login` | Público | Login; retorna JWT e perfil consultado no banco |
+| `GET` | `/auth/me` | JWT | Retorna os dados e o perfil atual do usuário |
+| `GET` | `/admin/teste` | JWT + `admin` | Verificação de autorização administrativa |
+| `GET` | `/produtos` | Público | Lista produtos e variações de produtos ativos |
+| `GET` | `/produtos/categorias` | Público | Lista categorias ativas |
+| `GET` | `/admin/dashboard` | JWT + `admin` | Indicadores e movimentações recentes |
+| `GET`, `POST`, `PUT`, `DELETE` | `/admin/produtos` e `/admin/produtos/:id` | JWT + `admin` | Cadastro, edição e desativação de produtos |
+| `POST` | `/admin/produtos/:id/variacoes` | JWT + `admin` | Cria uma variação de tamanho/cor |
+| `PUT`, `DELETE`, `PATCH` | `/admin/variacoes/:id` e `/admin/variacoes/:id/estoque` | JWT + `admin` | Edita variação, ajusta estoque ou remove variação sem estoque/histórico |
+| `GET`, `POST`, `PUT`, `DELETE` | `/admin/categorias` | JWT + `admin` | Gerencia categorias; categorias com produtos não podem ser apagadas |
+| `GET` | `/admin/movimentacoes` | JWT + `admin` | Consulta histórico de estoque |
+| `GET`, `POST` | `/pedidos` | JWT | Cria pedido pendente e lista pedidos do próprio cliente |
+| `GET`, `POST` | `/admin/pedidos` | JWT + `admin` | Lista pedidos e confirma pedidos pendentes |
+| `GET` | `/health` | Público | Verificação básica de disponibilidade HTTP |
 
-### Netlify
+## Frontend publicado
 
-O `netlify.toml` define `frontend/` como diretório estático de publicação. O backend e o banco precisam ser hospedados separadamente. A URL da API no frontend deve apontar para um backend acessível publicamente por HTTPS.
+`frontend/js/config.js` usa `http://localhost:3000` para desenvolvimento. Antes de publicar o frontend, altere `MBV_API_URL` para o endereço HTTPS real da API. Configure `CORS_ORIGINS` no backend com a origem exata do site publicado (sem caminho), separando várias origens por vírgula. Nenhum endereço de API ou valor no frontend é segredo.
 
-## Limitações e próximos passos
+O token é mantido em `localStorage` neste MVP; isso aumenta o impacto de uma eventual vulnerabilidade XSS. A autorização efetiva é sempre validada pelo backend. A API envia cabeçalhos básicos contra MIME sniffing e enquadramento, e impede cache de respostas de autenticação/administração. Para produção, usar HTTPS e revisar estratégia de sessão, política de segurança de conteúdo, proteção contra abuso e monitoramento.
 
-- Não há criação de pedidos, pagamento, cálculo de frete ou estoque.
-- Produtos e preços são estáticos no JavaScript e não vêm do MySQL.
-- O schema do banco precisa ser criado/configurado fora dos scripts SQL atuais.
-- Há testes automatizados do backend disponíveis por `npm test`; eles não substituem testes de integração com MySQL nem verificações visuais e de acessibilidade no navegador.
-- A rota `/health` não testa a conexão com o banco.
-- Antes de produção, configure uma URL HTTPS estável para a API, restrinja CORS aos domínios necessários e mantenha segredos apenas nas variáveis de ambiente do servidor.
+## Pedidos, estoque e operação do painel
+
+- O catálogo tenta consultar o MySQL e mantém os cards locais como fallback se a API estiver indisponível. A sacola existente continua em `localStorage`; os pedidos usam as variações e os preços atuais do banco, nunca os valores informados pelo navegador.
+- A criação gera um pedido `pendente`, não processa pagamento e não reserva nem baixa estoque. A confirmação manual no painel registra a saída e atualiza o estoque numa transação com bloqueio de linhas; um pedido só pode ser confirmado uma vez. Uma chave de idempotência por conteúdo evita pedidos duplicados em tentativas repetidas.
+- O painel só é exibido após `/auth/me` confirmar o perfil `admin`; cada endpoint administrativo também aplica autenticação e autorização no backend. Promoção de outros administradores continua restrita ao procedimento SQL existente.
+- Para começar a vender, primeiro cadastre no painel as variações reais de tamanho/cor e faça os ajustes de estoque. Produtos legados permanecem visíveis, mas sem variações reais ficam indisponíveis para compra.
+- A confirmação administrativa registra a decisão operacional e **não comprova pagamento**. Integrações reais de pagamento/frete, cancelamento e estorno de pedidos, rate limiting e controles de produção ainda precisam ser implementados antes de operar uma loja real.
+
+Faça backup do banco, execute as migrações na ordem indicada e teste o ciclo completo com dados de desenvolvimento antes de publicar. A aplicação não foi conectada a um MySQL real nesta implementação; a migração ainda precisa ser validada no schema e na versão MySQL do ambiente.

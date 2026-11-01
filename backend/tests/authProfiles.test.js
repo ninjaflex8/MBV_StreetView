@@ -54,10 +54,14 @@ require.cache[dbPath] = {
 
 const authRoutes = require("../routes/authRoutes");
 const adminRoutes = require("../routes/adminRoutes");
+const productRoutes = require("../routes/productRoutes");
+const orderRoutes = require("../routes/orderRoutes");
 const app = express();
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
+app.use("/produtos", productRoutes);
+app.use("/pedidos", orderRoutes);
 
 let server;
 let baseUrl;
@@ -155,6 +159,35 @@ test("cadastro, login, sessão e autorização usam o perfil do banco", async (t
             (await requisitar("/admin/teste", { token: tokenComPerfilForjado })).status,
             403
         );
+    });
+
+    await t.test("rotas administrativas de catálogo bloqueiam clientes e validam dados", async () => {
+        assert.equal((await requisitar("/admin/dashboard", { token: tokenCliente })).status, 403);
+        assert.equal((await requisitar("/admin/produtos", { token: tokenCliente })).status, 403);
+        assert.equal((await requisitar("/admin/produtos")).status, 401);
+        const produtoInvalido = await requisitar("/admin/produtos", {
+            metodo: "POST",
+            token: tokenAdmin,
+            corpo: {
+                nome: "<script>alert(1)</script>",
+                preco: -10,
+                categoriaId: 1,
+                imagemUrl: "javascript:alert(1)",
+                ativo: true,
+                variacoes: []
+            }
+        });
+        assert.equal(produtoInvalido.status, 400);
+    });
+
+    await t.test("criação de pedido exige sessão e valida itens", async () => {
+        assert.equal((await requisitar("/pedidos", { metodo: "POST" })).status, 401);
+        const pedidoInvalido = await requisitar("/pedidos", {
+            metodo: "POST",
+            token: tokenCliente,
+            corpo: { itens: [] }
+        });
+        assert.equal(pedidoInvalido.status, 400);
     });
 
     await t.test("token ausente, inválido ou expirado retorna 401", async () => {

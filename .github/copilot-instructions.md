@@ -198,7 +198,7 @@ O frontend utiliza HTML, CSS e JavaScript puro.
 Diretrizes:
 
 - Preserve a identidade visual existente.
-- Mantenha o padrão branco com detalhes roxos.
+- Preserve a identidade atual: fundo creme/branco, carvão e detalhes em verde-oliva.
 - Priorize responsividade.
 - Evite duplicação de CSS e JavaScript.
 - Organize os scripts por funcionalidade.
