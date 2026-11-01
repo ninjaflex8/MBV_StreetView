@@ -7,21 +7,7 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="fix: melhorar validação e upload de imagens de produtos no painel administrativo">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/commerceController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/commerceController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/database/connection.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/database/connection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/tests/productVariants.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/tests/productVariants.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/orders.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/orders.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/store.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pages/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pages/areadelogin.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/areadelogin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pages/paginaderegistro.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pages/paginaderegistro.html" afterDir="false" />
-    </list>
+    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="fix: add size control option for products and improve image upload validation" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -94,61 +80,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.2345137656363443" />
-      <entry key="MS500" value="3.051855365400018" />
-      <entry key="S2" value="6.447333166145595" />
-      <entry key="S5" value="9.803603080625535" />
-      <entry key="S10" value="12.452276686276413" />
-      <entry key="S30" value="16.862815168582067" />
-      <entry key="S60" value="21.772129694326487" />
-      <entry key="M2" value="27.331861676684532" />
-      <entry key="M5" value="34.628574569284574" />
-      <entry key="M10" value="41.04140302088217" />
-      <entry key="M15" value="45.42005332406296" />
-      <entry key="M30" value="57.43374413560992" />
-      <entry key="H1" value="80.85558840905904" />
-      <entry key="H2" value="111.55144627608688" />
-      <entry key="H4" value="139.8716088649908" />
-      <entry key="D1" value="177.21490003823644" />
-      <entry key="W1" value="185.54299917269606" />
+      <entry key="MS100" value="1.4586871011368263" />
+      <entry key="MS500" value="2.958407879675003" />
+      <entry key="S2" value="6.915973675038972" />
+      <entry key="S5" value="12.327382384838128" />
+      <entry key="S10" value="16.133600095893808" />
+      <entry key="S30" value="19.7503084456643" />
+      <entry key="S60" value="20.83330046925744" />
+      <entry key="M2" value="21.40576119125118" />
+      <entry key="M5" value="21.75964156372784" />
+      <entry key="M10" value="21.897830988275366" />
+      <entry key="M15" value="22.18614884606528" />
+      <entry key="M30" value="26.360483037979055" />
+      <entry key="H1" value="44.36147721239604" />
+      <entry key="H2" value="80.68019388875283" />
+      <entry key="H4" value="123.45033109665134" />
+      <entry key="D1" value="189.97925168259238" />
+      <entry key="W1" value="206.12974157734774" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="1.742268099228756E-70" />
-      <entry key="S2" value="3.633111664456608E-18" />
-      <entry key="S5" value="1.0570888658125049E-7" />
-      <entry key="S10" value="3.251290306651351E-4" />
-      <entry key="S30" value="0.06876255208210408" />
-      <entry key="S60" value="0.26234866402588236" />
-      <entry key="M2" value="0.5266040488179414" />
-      <entry key="M5" value="1.0581862274652418" />
-      <entry key="M10" value="1.8124846351868968" />
-      <entry key="M15" value="2.388048160301484" />
-      <entry key="M30" value="3.589045911637489" />
-      <entry key="H1" value="5.213278045504297" />
-      <entry key="H2" value="7.028651399410684" />
-      <entry key="H4" value="8.57592606588928" />
-      <entry key="D1" value="10.508071806664502" />
-      <entry key="W1" value="10.927062817880708" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="4.9838458683539006E-205" />
+      <entry key="S30" value="7.92844962953892E-69" />
+      <entry key="S60" value="8.908344410909187E-35" />
+      <entry key="M2" value="9.703831908587833E-18" />
+      <entry key="M5" value="2.1416363683393487E-7" />
+      <entry key="M10" value="8.153914399489387E-4" />
+      <entry key="M15" value="0.014020740689764437" />
+      <entry key="M30" value="0.2750064956659989" />
+      <entry key="H1" value="1.4430881394309485" />
+      <entry key="H2" value="3.6979666369036486" />
+      <entry key="H4" value="6.2205175617165365" />
+      <entry key="D1" value="9.96048793855208" />
+      <entry key="W1" value="10.843839834548877" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.1371079484865065" />
-      <entry key="MS500" value="2.9918909866623467" />
-      <entry key="S2" value="6.409486531610755" />
-      <entry key="S5" value="9.781459353556995" />
-      <entry key="S10" value="12.43898685646544" />
-      <entry key="S30" value="16.924981479056708" />
-      <entry key="S60" value="22.029406704317374" />
-      <entry key="M2" value="27.854669409987665" />
-      <entry key="M5" value="35.683413943511574" />
-      <entry key="M10" value="42.85063708019467" />
-      <entry key="M15" value="47.80514809122227" />
-      <entry key="M30" value="61.02045813026827" />
-      <entry key="H1" value="86.06703701619773" />
-      <entry key="H2" value="118.57876358627335" />
-      <entry key="H4" value="148.4466714073122" />
-      <entry key="D1" value="187.72278381155235" />
-      <entry key="W1" value="196.47003370519838" />
+      <entry key="MS100" value="1.4166279743825108" />
+      <entry key="MS500" value="2.9407116619980607" />
+      <entry key="S2" value="6.884513296418313" />
+      <entry key="S5" value="12.263962810874352" />
+      <entry key="S10" value="16.076003397685945" />
+      <entry key="S30" value="19.721500445409347" />
+      <entry key="S60" value="20.817346523230206" />
+      <entry key="M2" value="21.39736517409941" />
+      <entry key="M5" value="21.75617849796283" />
+      <entry key="M10" value="21.896895429028017" />
+      <entry key="M15" value="22.19898192699116" />
+      <entry key="M30" value="26.63472368921993" />
+      <entry key="H1" value="45.803764860435614" />
+      <entry key="H2" value="84.37731145674121" />
+      <entry key="H4" value="129.67014868919398" />
+      <entry key="D1" value="199.93954911275418" />
+      <entry key="W1" value="216.9735515884666" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -301,7 +287,8 @@
     <MESSAGE value="fix: corrigir estoque, sacola e painel administrativo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
     <MESSAGE value="fix: corrigir funcionalidades do carrossel e melhorar a integração com o catálogo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
     <MESSAGE value="fix: melhorar validação e upload de imagens de produtos no painel administrativo" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: melhorar validação e upload de imagens de produtos no painel administrativo" />
+    <MESSAGE value="fix: add size control option for products and improve image upload validation" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: add size control option for products and improve image upload validation" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
