@@ -13,6 +13,9 @@
   };
 
   const money = value => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const imageUrlForBrowser = imageUrl => imageUrl?.startsWith("/uploads/")
+      ? new URL(imageUrl, window.MBV_API_URL).href
+      : imageUrl;
   const safeReadCart = () => {
     try {
       const saved = JSON.parse(localStorage.getItem("mbvCart") || "[]");
@@ -120,7 +123,7 @@
       row.className = "cart-item";
 
       const image = document.createElement("img");
-      image.src = product.image;
+      image.src = imageUrlForBrowser(product.image) || "imagens/Logo_MBV.png";
       image.alt = product.name;
 
       const details = document.createElement("div");
@@ -442,7 +445,7 @@
     const imageWrap = document.createElement("div");
     imageWrap.className = "product-image-wrap";
     const image = document.createElement("img");
-    image.src = product.image || "imagens/Logo_MBV.png";
+    image.src = imageUrlForBrowser(product.image) || "imagens/Logo_MBV.png";
     image.alt = product.name;
     image.loading = "lazy";
     image.addEventListener("error", () => {

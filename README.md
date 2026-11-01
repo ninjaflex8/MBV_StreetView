@@ -14,7 +14,7 @@ Loja estática em HTML, CSS e JavaScript, com API de autenticação em Node.js/E
 - `backend/src/server.js`: servidor Express, CORS e rotas.
 - `backend/controllers`: cadastro e login.
 - `backend/controllers/commerceController.js`: produtos, categorias, estoque, dashboard e pedidos.
-- `backend/middleware`: autenticação JWT e autorização por perfil.
+- `backend/middleware`: autenticação JWT, autorização por perfil e validação de imagens enviadas.
 - `backend/database`: conexão MySQL e migrações SQL.
 - `backend/routes`: endpoints públicos de catálogo, pedidos autenticados e operações administrativas.
 - `backend/tests/authProfiles.test.js`: testes HTTP de cadastro, login, sessão e permissões.
@@ -36,6 +36,8 @@ npm run dev
 O backend só começa a escutar depois de estabelecer a conexão MySQL. A API fica em `http://localhost:3000`; a rota `GET /health` indica que o servidor está respondendo, mas não substitui a confirmação da conexão com o banco no log de inicialização. Em `NODE_ENV=production`, o servidor exige configurações explícitas de banco, `CORS_ORIGINS` e um `JWT_SECRET` com pelo menos 32 caracteres.
 
 Sirva o diretório `frontend` por um servidor estático local (por exemplo, Live Server em `http://localhost:5500`). Abrir as páginas por `file://` pode impedir as requisições da API. Para outra origem local, ajuste `CORS_ORIGINS` em `backend/.env`.
+
+No painel administrativo, imagens de produto são escolhidas do dispositivo e enviadas à API em JPG, PNG ou WebP, com limite de 5 MB. O backend valida o conteúdo, gera um nome aleatório e armazena em `backend/uploads`; configure `PRODUCT_IMAGES_DIR` para apontar a um volume persistente no ambiente de produção. A pasta de uploads não é versionada.
 
 ## Banco de dados
 

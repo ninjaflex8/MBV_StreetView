@@ -59,14 +59,18 @@ function validarProduto(body, parcial = false) {
   if (!parcial || Object.hasOwn(dados, "imagemUrl")) {
     const imagemUrl = dados.imagemUrl == null ? "" : dados.imagemUrl;
     if (typeof imagemUrl !== "string" || imagemUrl.length > 500) {
-      return { erro: "A URL da imagem deve ter no máximo 500 caracteres." };
+      return { erro: "A referência da imagem deve ter no máximo 500 caracteres." };
     }
     if (imagemUrl) {
-      try {
-        const url = new URL(imagemUrl);
-        if (!["http:", "https:"].includes(url.protocol)) throw new Error("Protocolo não permitido.");
-      } catch {
-        return { erro: "Informe uma URL de imagem HTTP ou HTTPS válida." };
+      const uploadLocalValido = /^\/uploads\/[a-f0-9]{32}\.(?:jpg|png|webp)$/.test(imagemUrl);
+      const imagemLegadaValida = /^imagens\/[a-zA-Z0-9_.-]+$/.test(imagemUrl);
+      if (!uploadLocalValido && !imagemLegadaValida) {
+        try {
+          const url = new URL(imagemUrl);
+          if (!["http:", "https:"].includes(url.protocol)) throw new Error("Protocolo não permitido.");
+        } catch {
+          return { erro: "Selecione uma imagem válida para o produto." };
+        }
       }
     }
     resultado.imagemUrl = imagemUrl || null;

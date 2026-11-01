@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("node:path");
 const cors = require("cors");
 const db = require("../database/connection");
 const authRoutes = require("../routes/authRoutes");
@@ -7,6 +8,7 @@ const adminRoutes = require("../routes/adminRoutes");
 const productRoutes = require("../routes/productRoutes");
 const orderRoutes = require("../routes/orderRoutes");
 const { PORT } = require("./config/envs");
+const productImagesDirectory = process.env.PRODUCT_IMAGES_DIR || path.join(__dirname, "..", "uploads");
 
 const app = express();
 app.disable("x-powered-by");
@@ -39,6 +41,13 @@ app.use(["/auth", "/admin", "/pedidos"], (_req, res, next) => {
   next();
 });
 app.use(express.json({ limit: "20kb" }));
+app.use("/uploads", express.static(productImagesDirectory, {
+  fallthrough: false,
+  immutable: true,
+  maxAge: "1y",
+  dotfiles: "deny",
+  index: false
+}));
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/produtos", productRoutes);

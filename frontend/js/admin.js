@@ -5,15 +5,68 @@
   const content = document.getElementById("adminContent");
   const accessMessage = document.getElementById("accessMessage");
   const message = document.getElementById("adminMessage");
+  const productForm = document.getElementById("productForm");
+  const productImageInput = document.getElementById("productImage");
+  const productImageUrl = document.getElementById("productImageUrl");
+  const productImagePreview = document.getElementById("productImagePreview");
+  const productImagePreviewImage = document.getElementById("productImagePreviewImage");
+  const productImagePreviewName = document.getElementById("productImagePreviewName");
   const money = value => Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   let categorias = [];
   let produtos = [];
   let produtoVariacoesId = null;
+  let temporaryImageUrl = null;
 
   function showMessage(text, error = false) {
     message.textContent = text;
     message.classList.toggle("is-error", error);
   }
+
+  function resolveImageUrl(imageUrl) {
+    if (!imageUrl) return "";
+    if (imageUrl.startsWith("/uploads/")) {
+      return new URL(imageUrl, window.MBV_API_URL).href;
+    }
+    if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+    return new URL(`../${imageUrl.replace(/^\/+/, "")}`, document.baseURI).href;
+  }
+
+  function showProductImagePreview(imageUrl, label) {
+    imageUrl = typeof imageUrl === "string" ? imageUrl : "";
+    const isTemporaryImage = imageUrl.startsWith("blob:");
+    if (temporaryImageUrl && temporaryImageUrl !== imageUrl) {
+      URL.revokeObjectURL(temporaryImageUrl);
+      temporaryImageUrl = null;
+    }
+    if (!imageUrl) {
+      productImagePreview.hidden = true;
+      productImagePreviewImage.removeAttribute("src");
+      productImagePreviewName.textContent = "";
+      return;
+    }
+    if (isTemporaryImage) temporaryImageUrl = imageUrl;
+    productImagePreviewImage.src = imageUrl.startsWith("blob:")
+        ? imageUrl
+        : resolveImageUrl(imageUrl);
+    productImagePreviewName.textContent = label;
+    productImagePreview.hidden = false;
+  }
+
+  productImageInput.addEventListener("change", () => {
+    const file = productImageInput.files[0];
+    if (!file) {
+      showProductImagePreview(productImageUrl.value, productImageUrl.value ? "Imagem atual" : "");
+      return;
+    }
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type) || file.size > 5 * 1024 * 1024) {
+      productImageInput.value = "";
+      showProductImagePreview(productImageUrl.value, productImageUrl.value ? "Imagem atual" : "");
+      showMessage("Selecione uma imagem JPG, PNG ou WebP de até 5 MB.", true);
+      return;
+    }
+    showProductImagePreview(URL.createObjectURL(file), file.name);
+  });
 
   function element(tag, text, className) {
     const node = document.createElement(tag);
@@ -28,7 +81,9 @@
       response = await fetch(`${window.MBV_API_URL}${path}`, {
         ...options,
         headers: {
-          ...(options.body ? { "Content-Type": "application/json" } : {}),
+          ...(options.body && !(options.body instanceof FormData)
+              ? { "Content-Type": "application/json" }
+              : {}),
           Authorization: `Bearer ${token}`,
           ...(window.MBV_API_HEADERS || {}),
           ...(options.headers || {})
@@ -184,7 +239,9 @@
     document.getElementById("productDescription").value = product.descricao || "";
     document.getElementById("productPrice").value = product.preco.toFixed(2);
     document.getElementById("productCategory").value = product.categoria.id;
-    document.getElementById("productImage").value = product.imagemUrl || "";
+    productImageInput.value = "";
+    productImageUrl.value = product.imagemUrl || "";
+    showProductImagePreview(product.imagemUrl, product.imagemUrl ? "Imagem atual" : "");
     document.getElementById("productActive").checked = product.ativo;
     document.getElementById("productSubmit").textContent = "Salvar alterações";
     document.getElementById("productCancelEdit").hidden = false;
@@ -193,9 +250,11 @@
   }
 
   function clearProductForm() {
-    document.getElementById("productForm").reset();
+    productForm.reset();
     document.getElementById("productId").value = "";
     document.getElementById("productActive").checked = true;
+    productImageUrl.value = "";
+    showProductImagePreview("", "");
     document.getElementById("productSubmit").textContent = "Cadastrar produto";
     document.getElementById("productCancelEdit").hidden = true;
   }
@@ -430,21 +489,21 @@
     });
   });
 
-  document.getElementById("productForm").addEventListener("submit", async event => {
+  productForm.addEventListener("submit", async event => {
     event.preventDefault();
     const id = document.getElementById("productId").value;
-    const data = {
-      nome: document.getElementById("productName").value,
-      descricao: document.getElementById("productDescription").value,
-      preco: Number(document.getElementById("productPrice").value),
-      categoriaId: Number(document.getElementById("productCategory").value),
-      imagemUrl: document.getElementById("productImage").value,
-      ativo: document.getElementById("productActive").checked
-    };
+    const data = new FormData();
+    data.append("nome", document.getElementById("productName").value);
+    data.append("descricao", document.getElementById("productDescription").value);
+    data.append("preco", document.getElementById("productPrice").value);
+    data.append("categoriaId", document.getElementById("productCategory").value);
+    data.append("imagemUrl", productImageUrl.value);
+    data.append("ativo", String(document.getElementById("productActive").checked));
+    if (productImageInput.files[0]) data.append("imagem", productImageInput.files[0]);
     try {
       await api(id ? `/admin/produtos/${id}` : "/admin/produtos", {
         method: id ? "PUT" : "POST",
-        body: JSON.stringify(data)
+        body: data
       });
       clearProductForm();
       await Promise.all([loadProducts(), loadDashboard()]);

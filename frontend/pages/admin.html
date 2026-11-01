@@ -63,8 +63,14 @@
               <div><label for="productPrice">Preço (R$)</label><input id="productPrice" name="preco" type="number" min="0.01" max="99999999.99" step="0.01" required></div>
               <div><label for="productCategory">Categoria</label><select id="productCategory" name="categoriaId" required></select></div>
             </div>
-            <label for="productImage">URL da imagem (HTTP/HTTPS)</label>
-            <input id="productImage" name="imagemUrl" type="url" maxlength="500" placeholder="https://...">
+            <label for="productImage">Imagem do produto</label>
+            <input id="productImage" name="imagem" type="file" accept="image/jpeg,image/png,image/webp">
+            <p class="admin-image-hint">Escolha uma imagem JPG, PNG ou WebP de até 5 MB. Se deixar vazio ao editar, a imagem atual será mantida.</p>
+            <input id="productImageUrl" type="hidden">
+            <div class="admin-image-preview" id="productImagePreview" hidden>
+              <img id="productImagePreviewImage" alt="Pré-visualização da imagem do produto">
+              <span id="productImagePreviewName"></span>
+            </div>
             <label class="admin-checkbox"><input id="productActive" name="ativo" type="checkbox" checked> Produto ativo na loja</label>
             <p>Cadastre o produto sem presumir tamanhos ou cores. Depois, use “Variações / estoque” no catálogo para cadastrar apenas as combinações reais. A quantidade inicial de cada variação pode ser zero.</p>
             <div class="admin-form-actions">

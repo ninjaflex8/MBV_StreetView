@@ -124,7 +124,9 @@
           ? result.produtos
               .filter(product => typeof product.imagemUrl === "string" && product.imagemUrl.trim())
               .map(product => {
-                const imageUrl = new URL(product.imagemUrl, document.baseURI);
+                const imageUrl = product.imagemUrl.startsWith("/uploads/")
+                    ? new URL(product.imagemUrl, window.MBV_API_URL)
+                    : new URL(product.imagemUrl, document.baseURI);
                 if (!["http:", "https:"].includes(imageUrl.protocol)) return null;
                 return { image: imageUrl.href, alt: product.nome };
               })

@@ -2,6 +2,7 @@ const express = require("express");
 const authMiddleware = require("../middleware/authMiddlewares");
 const autorizarPerfil = require("../middleware/autorizarPerfil");
 const commerceController = require("../controllers/commerceController");
+const uploadProductImage = require("../middleware/uploadProductImage");
 
 const router = express.Router();
 
@@ -16,8 +17,8 @@ router.post("/categorias", commerceController.criarCategoria);
 router.put("/categorias/:id", commerceController.atualizarCategoria);
 router.delete("/categorias/:id", commerceController.excluirCategoria);
 router.get("/produtos", commerceController.listarProdutos);
-router.post("/produtos", commerceController.criarProduto);
-router.put("/produtos/:id", commerceController.atualizarProduto);
+router.post("/produtos", uploadProductImage, commerceController.criarProduto);
+router.put("/produtos/:id", uploadProductImage, commerceController.atualizarProduto);
 router.delete("/produtos/:id", commerceController.excluirProduto);
 router.post("/produtos/:id/variacoes", commerceController.criarVariacao);
 router.put("/variacoes/:id", commerceController.atualizarVariacao);
