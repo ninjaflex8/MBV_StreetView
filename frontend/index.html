@@ -11,6 +11,7 @@
 
 <body class="store-page">
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<div class="store-toast" id="storeToast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 <div class="announcement-bar">
   <span>MBV STREETVIEW / DROP 01</span>
   <span>Vista sua identidade. Sem pedir licença.</span>
@@ -39,12 +40,9 @@
           aria-label="Abrir menu de navegação"
           aria-expanded="false"
           aria-controls="mainNavLinks"
-  ><span aria-hidden="true">☰</span></button>
+  ><span aria-hidden="true">☰</span>  </button>
 
   <div class="nav-actions">
-    <a id="ordersLink" class="account-link" href="pages/pedidos.html" hidden>
-      Meus pedidos
-    </a>
     <a id="adminPanelLink" class="account-link" href="pages/admin.html" hidden>
       Painel admin <span aria-hidden="true">↗</span>
     </a>
@@ -64,7 +62,7 @@
             aria-expanded="false"
             aria-controls="cartDrawer"
     >
-      Sacola <span class="cart-count" id="cartCount">0</span>
+      Sacola <span class="cart-count" id="cartCount" aria-live="polite" aria-atomic="true">0</span>
     </button>
   </div>
 </nav>
@@ -113,6 +111,8 @@
         <span class="image-stamp">STREET<br>UNIFORM</span>
         <button class="carousel-control carousel-previous" id="heroCarouselPrevious" type="button" aria-label="Ver imagem anterior do destaque">‹</button>
         <button class="carousel-control carousel-next" id="heroCarouselNext" type="button" aria-label="Ver próxima imagem do destaque">›</button>
+        <button class="carousel-toggle" id="heroCarouselToggle" type="button" aria-label="Pausar carrossel">Ⅱ</button>
+        <div class="carousel-progress" id="heroCarouselProgress" role="progressbar" aria-label="Tempo até a próxima imagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
       </div>
       <p class="visually-hidden" id="heroCarouselStatus" role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="hero-side-note">
@@ -125,16 +125,22 @@
 
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <span>STREETWEAR WITH INTENTION</span>
-      <i>✳</i>
-      <span>IDENTITY OVER TRENDS</span>
-      <i>✳</i>
-      <span>MADE TO STAND OUT</span>
-      <i>✳</i>
-      <span>STREETWEAR WITH INTENTION</span>
-      <i>✳</i>
-      <span>IDENTITY OVER TRENDS</span>
-      <i>✳</i>
+      <div class="ticker-group">
+        <span>STREETWEAR WITH INTENTION</span>
+        <i>✳</i>
+        <span>IDENTITY OVER TRENDS</span>
+        <i>✳</i>
+        <span>MADE TO STAND OUT</span>
+        <i>✳</i>
+      </div>
+      <div class="ticker-group">
+        <span>STREETWEAR WITH INTENTION</span>
+        <i>✳</i>
+        <span>IDENTITY OVER TRENDS</span>
+        <i>✳</i>
+        <span>MADE TO STAND OUT</span>
+        <i>✳</i>
+      </div>
     </div>
   </div>
 
@@ -198,6 +204,7 @@
       </label>
     </div>
 
+    <p id="catalogFeedback" class="catalog-feedback" role="status" aria-live="polite" hidden></p>
     <div class="product-grid" role="list" aria-label="Produtos da loja">
       <article
               class="product-card"
@@ -553,7 +560,6 @@
     const userButton = document.getElementById("userButton");
     const logoutButton = document.getElementById("logoutButton");
     const adminPanelLink = document.getElementById("adminPanelLink");
-    const ordersLink = document.getElementById("ordersLink");
 
     function clearSession() {
       localStorage.removeItem("authToken");
@@ -567,7 +573,6 @@
       userButton.href = "pages/areadelogin.html";
       logoutButton.hidden = true;
       adminPanelLink.hidden = true;
-      ordersLink.hidden = true;
     }
 
     function showLoggedIn(name, perfil) {
@@ -576,12 +581,10 @@
       userButton.href = "#";
       logoutButton.hidden = false;
       adminPanelLink.hidden = perfil !== "admin";
-      ordersLink.hidden = false;
     }
 
     function showSessionUnavailable() {
       adminPanelLink.hidden = true;
-      ordersLink.hidden = true;
       userButton.textContent = "Sessão não validada";
       userButton.href = "pages/areadelogin.html";
       logoutButton.hidden = false;

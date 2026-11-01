@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F3EE">
+  <meta name="description" content="Painel administrativo da MBV StreetView.">
+  <title>Painel administrativo | MBV StreetView</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-page">
+  <a class="skip-link" href="#adminContent">Pular para o conteúdo</a>
+  <header class="admin-header">
+    <a class="site-brand" href="../index.html" aria-label="MBV StreetView — voltar à loja">
+      <img src="../imagens/Logo_MBV.png" alt="" class="site-logo">
+      <span class="brand-lockup"><strong>MBV</strong><small>ADMINISTRAÇÃO</small></span>
+    </a>
+    <div class="admin-header-actions">
+      <span id="adminGreeting">Validando sessão…</span>
+      <a class="account-link" href="../index.html">Ver loja ↗</a>
+    </div>
+  </header>
+
+  <main id="adminContent" class="admin-layout" hidden>
+    <section class="page-carousel admin-page-carousel" data-carousel data-image-base="../imagens/" role="region" aria-roledescription="carrossel" aria-label="Destaques da coleção MBV">
+      <div class="page-carousel-frame">
+        <img data-carousel-image src="../imagens/camisa_brooklyn.jpg" alt="Camiseta Brooklyn da coleção MBV StreetView">
+        <span class="page-carousel-count" data-carousel-count aria-hidden="true">MBV / 001</span>
+        <button class="carousel-control carousel-previous" data-carousel-previous type="button" aria-label="Ver imagem anterior do destaque">‹</button>
+        <button class="carousel-control carousel-next" data-carousel-next type="button" aria-label="Ver próxima imagem do destaque">›</button>
+        <div class="page-carousel-progress" data-carousel-progress role="progressbar" aria-label="Tempo até a próxima imagem" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+      </div>
+      <p class="visually-hidden" data-carousel-status role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
+    <div class="admin-shell">
+      <aside class="admin-sidebar" aria-label="Navegação administrativa">
+        <div class="admin-title">
+          <p class="eyebrow">GESTÃO MBV / ÁREA RESTRITA</p>
+          <h1>Painel <span>administrativo.</span></h1>
+          <p>Gerencie catálogo, categorias, estoque e pedidos.</p>
+        </div>
+        <nav class="admin-tabs" aria-label="Seções administrativas">
+          <button type="button" class="admin-tab is-active" data-section="dashboard" aria-pressed="true">Visão geral</button>
+          <button type="button" class="admin-tab" data-section="products" aria-pressed="false">Produtos</button>
+          <button type="button" class="admin-tab" data-section="categories" aria-pressed="false">Categorias</button>
+          <button type="button" class="admin-tab" data-section="stock" aria-pressed="false">Estoque</button>
+          <button type="button" class="admin-tab" data-section="orders" aria-pressed="false">Pedidos</button>
+        </nav>
+        <button id="adminLogout" class="account-link admin-logout" type="button">Sair</button>
+      </aside>
+
+      <div class="admin-workspace">
+        <p id="adminMessage" class="admin-message" role="status" aria-live="polite"></p>
+
+        <section class="admin-section" id="section-dashboard" aria-labelledby="dashboardTitle">
+          <h2 id="dashboardTitle">Resumo da loja</h2>
+          <div id="dashboardMetrics" class="dashboard-metrics" aria-live="polite"></div>
+          <h3>Movimentações recentes</h3>
+          <div id="dashboardMovements" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-section" id="section-products" aria-labelledby="productsTitle" hidden>
+          <h2 id="productsTitle">Produtos</h2>
+          <form id="productForm" class="admin-form">
+            <input id="productId" type="hidden">
+            <label for="productName">Nome</label>
+            <input id="productName" name="nome" required minlength="3" maxlength="100">
+            <label for="productDescription">Descrição</label>
+            <textarea id="productDescription" name="descricao" maxlength="500" rows="3"></textarea>
+            <div class="admin-form-grid">
+              <div><label for="productPrice">Preço (R$)</label><input id="productPrice" name="preco" type="number" min="0.01" max="99999999.99" step="0.01" required></div>
+              <div><label for="productCategory">Categoria</label><select id="productCategory" name="categoriaId" required></select></div>
+            </div>
+            <label for="productImage">URL da imagem (HTTP/HTTPS)</label>
+            <input id="productImage" name="imagemUrl" type="url" maxlength="500" placeholder="https://...">
+            <label class="admin-checkbox"><input id="productActive" name="ativo" type="checkbox" checked> Produto ativo na loja</label>
+            <p>Cadastre o produto sem presumir tamanhos ou cores. Depois, use “Variações / estoque” no catálogo para cadastrar apenas as combinações reais. A quantidade inicial de cada variação pode ser zero.</p>
+            <div class="admin-form-actions">
+              <button class="button button-dark" id="productSubmit" type="submit">Cadastrar produto</button>
+              <button class="admin-secondary-button" id="productCancelEdit" type="button" hidden>Cancelar edição</button>
+            </div>
+          </form>
+          <h3>Catálogo cadastrado</h3>
+          <div id="productsTable" class="admin-table-wrap"></div>
+
+          <section id="variantManager" class="variant-manager" hidden aria-labelledby="variantManagerTitle">
+            <h3 id="variantManagerTitle" tabindex="-1">Variações do produto</h3>
+            <p id="variantProductName"></p>
+            <form id="variantForm" class="admin-form admin-inline-form">
+              <label for="variantSize">Tamanho</label><input id="variantSize" maxlength="30" placeholder="Ex.: P, M, G ou Tamanho único" required>
+              <label for="variantColor">Cor</label><input id="variantColor" maxlength="40" placeholder="Informe a cor desta variação" required>
+              <label for="variantStock">Estoque inicial</label><input id="variantStock" type="number" min="0" max="1000000" step="1" value="0" required>
+              <button class="admin-secondary-button" type="submit">Adicionar variação</button>
+            </form>
+            <div id="variantsTable" class="admin-table-wrap"></div>
+          </section>
+        </section>
+
+        <section class="admin-section" id="section-categories" aria-labelledby="categoriesTitle" hidden>
+          <h2 id="categoriesTitle">Categorias</h2>
+          <form id="categoryForm" class="admin-form admin-inline-form">
+            <label for="categoryName">Nova categoria</label>
+            <input id="categoryName" minlength="2" maxlength="80" required>
+            <button class="button button-dark" type="submit">Criar categoria</button>
+          </form>
+          <div id="categoriesTable" class="admin-table-wrap"></div>
+        </section>
+
+        <section class="admin-section" id="section-orders" aria-labelledby="ordersTitle" hidden>
+          <h2 id="ordersTitle">Pedidos</h2>
+          <p>Pedidos ficam pendentes até confirmação administrativa. Confirmar registra a saída e baixa o estoque em uma transação; isso não representa confirmação de pagamento.</p>
+          <div id="ordersList" class="admin-list"></div>
+        </section>
+
+        <section class="admin-section" id="section-stock" aria-labelledby="stockTitle" hidden>
+          <h2 id="stockTitle">Histórico de estoque</h2>
+          <div id="stockMovements" class="admin-table-wrap"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <main id="accessMessage" class="admin-access-message" role="alert">
+    <h1>Validando acesso administrativo…</h1>
+    <p>Esta área é exclusiva para contas com perfil de administrador.</p>
+    <a class="button button-dark" href="../index.html">Voltar à loja</a>
+  </main>
+  <script src="../js/config.js"></script>
+  <script src="../js/carousel.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

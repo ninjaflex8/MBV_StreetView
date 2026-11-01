@@ -47,10 +47,12 @@
   const copyOrder = document.getElementById("copyOrder");
   const checkoutOrder = document.getElementById("checkoutOrder");
   const cartFeedback = document.getElementById("cartFeedback");
+  const storeToast = document.getElementById("storeToast");
   const productGrid = document.querySelector(".product-grid");
   const productCount = document.getElementById("productCount");
   const filterGroup = document.querySelector(".filter-group");
   const emptyProducts = document.getElementById("emptyProducts");
+  const catalogFeedback = document.getElementById("catalogFeedback");
   const mobileMenuToggle = document.getElementById("mobileMenuToggle");
   const navLinks = document.getElementById("mainNavLinks");
   const carouselImage = document.getElementById("heroCarouselImage");
@@ -76,6 +78,8 @@
   let carouselManuallyPaused = reducedMotion.matches;
   let carouselFocusPaused = false;
   let returnFocusTarget = null;
+  let toastTimer = null;
+  let toastHideTimer = null;
 
   function persistCart() {
     try {
@@ -196,12 +200,32 @@
     });
   }
 
+  function showToast(message) {
+    window.clearTimeout(toastTimer);
+    window.clearTimeout(toastHideTimer);
+    storeToast.hidden = false;
+    storeToast.classList.remove("is-visible");
+    storeToast.textContent = "";
+    window.requestAnimationFrame(() => {
+      storeToast.textContent = message;
+      storeToast.classList.add("is-visible");
+    });
+    toastTimer = window.setTimeout(() => {
+      storeToast.classList.remove("is-visible");
+      toastHideTimer = window.setTimeout(() => {
+        storeToast.hidden = true;
+      }, 220);
+    }, 3000);
+  }
+
   function addToCart(id, variationId) {
     if (!products[id]) return;
     const product = products[id];
     const variation = product.variations?.find(entry => entry.id === Number(variationId));
-    if (product.variations?.length && !variation) {
-      showFeedback("Selecione uma variação disponível antes de adicionar à sacola.");
+    if (!variation) {
+      showFeedback(product.variations?.length
+          ? "Selecione uma variação disponível antes de adicionar à sacola."
+          : "Este produto ainda não possui variações cadastradas.");
       return;
     }
     if (variation && variation.estoque < 1) {
@@ -232,8 +256,7 @@
     }
     persistCart();
     renderCart();
-    showFeedback(`${product.name} adicionada à sacola.`);
-    openDrawer();
+    showToast("Seu produto foi adicionado à sacola!");
   }
 
   function changeQuantity(id, variationId, amount) {
@@ -360,36 +383,41 @@
     }
   }
 
-  document.getElementById("heroCarouselPrevious").addEventListener("click", () => {
-    showCarouselSlide(carouselIndex - 1);
-    restartCarouselTimer();
-  });
-  document.getElementById("heroCarouselNext").addEventListener("click", () => {
-    showCarouselSlide(carouselIndex + 1);
-    restartCarouselTimer();
-  });
-  carouselToggle.addEventListener("click", () => {
-    carouselManuallyPaused = !carouselManuallyPaused;
-    if (!carouselManuallyPaused) carouselFocusPaused = false;
-    refreshCarouselTimer();
-  });
-  carouselFrame.addEventListener("mouseenter", refreshCarouselTimer);
-  carouselFrame.addEventListener("mouseleave", refreshCarouselTimer);
-  carouselFrame.addEventListener("focusin", () => {
-    carouselFocusPaused = true;
-    refreshCarouselTimer();
-  });
-  carouselFrame.addEventListener("focusout", event => {
-    if (!carouselFrame.contains(event.relatedTarget)) {
-      carouselFocusPaused = false;
+  if (
+      carouselImage && carouselCount && carouselStatus && carouselFrame &&
+      carouselToggle && carouselProgress && carouselProgressBar
+  ) {
+    document.getElementById("heroCarouselPrevious").addEventListener("click", () => {
+      showCarouselSlide(carouselIndex - 1);
+      restartCarouselTimer();
+    });
+    document.getElementById("heroCarouselNext").addEventListener("click", () => {
+      showCarouselSlide(carouselIndex + 1);
+      restartCarouselTimer();
+    });
+    carouselToggle.addEventListener("click", () => {
+      carouselManuallyPaused = !carouselManuallyPaused;
+      if (!carouselManuallyPaused) carouselFocusPaused = false;
       refreshCarouselTimer();
-    }
-  });
-  document.addEventListener("visibilitychange", refreshCarouselTimer);
-  reducedMotion.addEventListener("change", event => {
-    if (event.matches) carouselManuallyPaused = true;
-    refreshCarouselTimer();
-  });
+    });
+    carouselFrame.addEventListener("mouseenter", refreshCarouselTimer);
+    carouselFrame.addEventListener("mouseleave", refreshCarouselTimer);
+    carouselFrame.addEventListener("focusin", () => {
+      carouselFocusPaused = true;
+      refreshCarouselTimer();
+    });
+    carouselFrame.addEventListener("focusout", event => {
+      if (!carouselFrame.contains(event.relatedTarget)) {
+        carouselFocusPaused = false;
+        refreshCarouselTimer();
+      }
+    });
+    document.addEventListener("visibilitychange", refreshCarouselTimer);
+    reducedMotion.addEventListener("change", event => {
+      if (event.matches) carouselManuallyPaused = true;
+      refreshCarouselTimer();
+    });
+  }
 
   function closeMobileMenu() {
     navLinks.classList.remove("is-open");
@@ -490,7 +518,7 @@
     const target = event.target;
     if (!(target instanceof Element)) return;
     const button = target.closest("button.filter-button[data-filter]");
-    if (!button || button.parentElement !== filterGroup) return;
+    if (!button || !filterGroup.contains(button)) return;
     activeFilter = button.dataset.filter || "all";
     updateFilterButtons();
     applyFilters();
@@ -554,7 +582,7 @@
     quickAdd.dataset.add = product.id;
     quickAdd.setAttribute("aria-label", `Adicionar ${product.name} à sacola`);
     quickAdd.textContent = "+";
-    quickAdd.disabled = product.variations.every(variation => variation.estoque < 1);
+    quickAdd.disabled = true;
     imageWrap.append(quickAdd);
 
     const details = document.createElement("div");
@@ -583,6 +611,14 @@
     selector.id = selectorId;
     selector.dataset.variationSelect = "";
     const available = product.variations.filter(variation => variation.estoque > 0);
+    const prompt = document.createElement("option");
+    prompt.value = "";
+    prompt.textContent = !product.variations.length
+        ? "Variações não cadastradas"
+        : available.length ? "Selecione tamanho e cor" : "Sem estoque";
+    prompt.disabled = true;
+    prompt.selected = true;
+    selector.append(prompt);
     product.variations.forEach(variation => {
       const option = document.createElement("option");
       option.value = String(variation.id);
@@ -591,24 +627,34 @@
       selector.append(option);
     });
     if (!available.length) {
-      const unavailable = document.createElement("option");
-      unavailable.textContent = "Sem estoque";
-      unavailable.value = "";
-      selector.replaceChildren(unavailable);
       selector.disabled = true;
     }
+    const stockMessage = document.createElement("p");
+    stockMessage.className = "product-stock-message";
+    stockMessage.textContent = product.variations.length
+        ? "Sem unidades disponíveis no estoque."
+        : "Tamanhos e cores ainda não cadastrados.";
 
     const addButton = document.createElement("button");
     addButton.className = "add-button";
     addButton.type = "button";
     addButton.dataset.add = product.id;
-    addButton.append(document.createTextNode(available.length ? "Adicionar à sacola " : "Indisponível "));
+    addButton.append(document.createTextNode(available.length ? "Selecione uma variação " : "Indisponível "));
     const arrow = document.createElement("span");
     arrow.setAttribute("aria-hidden", "true");
     arrow.textContent = "↗";
     addButton.append(arrow);
-    addButton.disabled = available.length === 0;
-    card.append(imageWrap, details, description, selectorLabel, selector, addButton);
+    addButton.disabled = true;
+    selector.addEventListener("change", () => {
+      const selectedVariation = product.variations.find(
+          variation => variation.id === Number(selector.value)
+      );
+      const canAdd = Boolean(selectedVariation && selectedVariation.estoque > 0);
+      quickAdd.disabled = !canAdd;
+      addButton.disabled = !canAdd;
+      addButton.firstChild.textContent = canAdd ? "Adicionar à sacola " : "Selecione uma variação ";
+    });
+    card.append(imageWrap, details, description, selectorLabel, selector, stockMessage, addButton);
     return card;
   }
 
@@ -617,13 +663,13 @@
       const response = await fetch(`${window.MBV_API_URL}/produtos`, {
         headers: window.MBV_API_HEADERS || {}
       });
-      if (!response.ok) throw new Error("Catálogo indisponível.");
+      if (!response.ok) throw new Error(`Catálogo indisponível (HTTP ${response.status}).`);
       const result = await response.json();
       if (!Array.isArray(result.produtos)) throw new Error("Formato de catálogo inválido.");
       const categoriesResponse = await fetch(`${window.MBV_API_URL}/produtos/categorias`, {
         headers: window.MBV_API_HEADERS || {}
       });
-      if (!categoriesResponse.ok) throw new Error("Categorias indisponíveis.");
+      if (!categoriesResponse.ok) throw new Error(`Categorias indisponíveis (HTTP ${categoriesResponse.status}).`);
       const categoriesResult = await categoriesResponse.json();
       if (Array.isArray(categoriesResult.categorias)) {
         const allFilter = filterGroup.querySelector('[data-filter="all"]');
@@ -661,8 +707,11 @@
       persistCart();
       renderCart();
       applyFilters();
+      catalogFeedback.textContent = "";
+      catalogFeedback.hidden = true;
     } catch (error) {
-      showFeedback("Catálogo online indisponível; exibindo os produtos já carregados. " + error.message);
+      catalogFeedback.textContent = `Não foi possível carregar o catálogo da API; os produtos já disponíveis continuam na página. ${error.message}`;
+      catalogFeedback.hidden = false;
     }
   }
 
@@ -744,8 +793,13 @@
 
   renderCart();
   applyFilters();
-  showCarouselSlide(0);
-  updateCarouselProgress();
-  refreshCarouselTimer();
+  if (
+      carouselImage && carouselCount && carouselStatus && carouselFrame &&
+      carouselToggle && carouselProgress && carouselProgressBar
+  ) {
+    showCarouselSlide(0);
+    updateCarouselProgress();
+    refreshCarouselTimer();
+  }
   loadCatalog();
 })();
