@@ -50,7 +50,6 @@
   const copyOrder = document.getElementById("copyOrder");
   const checkoutOrder = document.getElementById("checkoutOrder");
   const cartFeedback = document.getElementById("cartFeedback");
-  const storeToast = document.getElementById("storeToast");
   const productGrid = document.querySelector(".product-grid");
   const productCount = document.getElementById("productCount");
   const filterGroup = document.querySelector(".filter-group");
@@ -59,8 +58,6 @@
   const mobileMenuToggle = document.getElementById("mobileMenuToggle");
   const navLinks = document.getElementById("mainNavLinks");
   let returnFocusTarget = null;
-  let toastTimer = null;
-  let toastHideTimer = null;
 
   function persistCart() {
     try {
@@ -134,7 +131,7 @@
       price.textContent = money(product.price);
       const variation = product.variations?.find(entry =>
           entry.id === item.variationId
-      ) || product.variations?.[0];
+      );
       if (variation) {
         const variantLabel = document.createElement("p");
         variantLabel.className = "cart-item-variant";
@@ -143,7 +140,12 @@
             : item.color || variation.cor;
         details.append(name, price, variantLabel);
       } else {
-        details.append(name, price);
+        const variantLabel = document.createElement("p");
+        variantLabel.className = "cart-item-variant";
+        variantLabel.textContent = item.variationId
+            ? `Variação indisponível${item.size || item.color ? ` (${[item.size, item.color].filter(Boolean).join(" / ")})` : ""}. Remova e selecione outra opção na loja.`
+            : "Selecione novamente o tamanho e a cor na loja.";
+        details.append(name, price, variantLabel);
       }
       const quantity = document.createElement("div");
       quantity.className = "quantity-control";
@@ -161,7 +163,7 @@
       plus.type = "button";
       plus.textContent = "+";
       plus.setAttribute("aria-label", `Aumentar quantidade de ${product.name}`);
-      plus.disabled = item.quantity >= 99 || Boolean(variation && item.quantity >= variation.estoque);
+      plus.disabled = item.quantity >= 99 || !variation || item.quantity >= variation.estoque;
       plus.addEventListener("click", () => changeQuantity(item.id, item.variationId, 1));
 
       quantity.append(minus, amount, plus);
@@ -181,65 +183,6 @@
       row.append(image, details, remove);
       cartItems.append(row);
     });
-  }
-
-  function showToast(message) {
-    window.clearTimeout(toastTimer);
-    window.clearTimeout(toastHideTimer);
-    storeToast.hidden = false;
-    storeToast.classList.remove("is-visible");
-    storeToast.textContent = "";
-    window.requestAnimationFrame(() => {
-      storeToast.textContent = message;
-      storeToast.classList.add("is-visible");
-    });
-    toastTimer = window.setTimeout(() => {
-      storeToast.classList.remove("is-visible");
-      toastHideTimer = window.setTimeout(() => {
-        storeToast.hidden = true;
-      }, 220);
-    }, 3000);
-  }
-
-  function addToCart(id, variationId) {
-    if (!products[id]) return;
-    const product = products[id];
-    const variation = product.variations?.find(entry => entry.id === Number(variationId));
-    if (!variation) {
-      showFeedback(product.variations?.length
-          ? "Selecione uma variação disponível antes de adicionar à sacola."
-          : "Este produto ainda não possui variações cadastradas.");
-      return;
-    }
-    if (variation && variation.estoque < 1) {
-      showFeedback("Esta variação está sem estoque no momento.");
-      return;
-    }
-    const existing = cart.find(item =>
-        item.id === id && Number(item.variationId || 0) === Number(variation?.id || 0)
-    );
-    if (existing) {
-      if (existing.quantity >= 99 || (variation && existing.quantity >= variation.estoque)) {
-        showFeedback(variation
-            ? `Estoque disponível: ${variation.estoque} unidade(s).`
-            : "Limite de 99 unidades por peça.");
-        return;
-      }
-      existing.quantity += 1;
-    } else {
-      cart.push({
-        id,
-        quantity: 1,
-        ...(variation ? {
-          variationId: variation.id,
-          size: variation.tamanho,
-          color: variation.cor
-        } : {})
-      });
-    }
-    persistCart();
-    renderCart();
-    showToast("Seu produto foi adicionado à sacola!");
   }
 
   function changeQuantity(id, variationId, amount) {
@@ -318,13 +261,6 @@
     link.addEventListener("click", closeMobileMenu);
   });
 
-  productGrid.addEventListener("click", event => {
-    const button = event.target.closest("[data-add]");
-    if (!button || !productGrid.contains(button)) return;
-    const card = button.closest(".product-card");
-    const selector = card.querySelector("[data-variation-select]");
-    addToCart(button.dataset.add, selector?.value);
-  });
   document.getElementById("openCart").addEventListener("click", openDrawer);
   document.getElementById("closeCart").addEventListener("click", closeDrawer);
   document.getElementById("continueShopping").addEventListener("click", closeDrawer);
@@ -405,10 +341,13 @@
 
   copyOrder.addEventListener("click", async () => {
     if (!cart.length) return;
+    if (cart.some(item => !products[item.id]?.variations?.some(entry => entry.id === item.variationId))) {
+      showFeedback("Há itens com variação indisponível. Remova-os e selecione novamente tamanho e cor na loja.");
+      return;
+    }
     const lines = cart.map(item => {
       const product = products[item.id];
-      const variation = product.variations?.find(entry => entry.id === item.variationId)
-          || product.variations?.[0];
+      const variation = product.variations.find(entry => entry.id === item.variationId);
       const variantText = variation
           ? product.controlsSize
               ? ` (${item.size || variation.tamanho}, ${item.color || variation.cor})`
@@ -456,15 +395,6 @@
       image.src = "imagens/Logo_MBV.png";
     }, { once: true });
     imageWrap.append(image);
-    const quickAdd = document.createElement("button");
-    quickAdd.className = "quick-add";
-    quickAdd.type = "button";
-    quickAdd.dataset.add = product.id;
-    quickAdd.setAttribute("aria-label", `Adicionar ${product.name} à sacola`);
-    quickAdd.textContent = "+";
-    quickAdd.disabled = true;
-    imageWrap.append(quickAdd);
-
     const details = document.createElement("div");
     details.className = "product-details";
     const titleWrap = document.createElement("div");
@@ -482,61 +412,15 @@
     const description = document.createElement("p");
     description.className = "product-description";
     description.textContent = product.description || "";
-    const selectorLabel = document.createElement("label");
-    selectorLabel.className = "product-variation-label";
-    const selectorId = `variation-${product.id}`;
-    selectorLabel.htmlFor = selectorId;
-    selectorLabel.textContent = product.controlsSize ? "Tamanho / cor" : "Cor";
-    const selector = document.createElement("select");
-    selector.id = selectorId;
-    selector.dataset.variationSelect = "";
-    const available = product.variations.filter(variation => variation.estoque > 0);
-    const prompt = document.createElement("option");
-    prompt.value = "";
-    prompt.textContent = !product.variations.length
-        ? "Variações não cadastradas"
-        : available.length
-            ? product.controlsSize ? "Selecione tamanho e cor" : "Selecione uma cor"
-            : "Sem estoque";
-    prompt.disabled = true;
-    prompt.selected = true;
-    selector.append(prompt);
-    product.variations.forEach(variation => {
-      const option = document.createElement("option");
-      option.value = String(variation.id);
-      option.textContent = `${product.controlsSize ? `${variation.tamanho} / ` : ""}${variation.cor} — ${variation.estoque} disponível(is)`;
-      option.disabled = variation.estoque < 1;
-      selector.append(option);
-    });
-    if (!available.length) {
-      selector.disabled = true;
-    }
-    const stockMessage = document.createElement("p");
-    stockMessage.className = "product-stock-message";
-    stockMessage.textContent = product.variations.length
-        ? "Sem unidades disponíveis no estoque."
-        : "Tamanhos e cores ainda não cadastrados.";
-
-    const addButton = document.createElement("button");
-    addButton.className = "add-button";
-    addButton.type = "button";
-    addButton.dataset.add = product.id;
-    addButton.append(document.createTextNode(available.length ? "Selecione uma variação " : "Indisponível "));
+    const productLink = document.createElement("a");
+    productLink.className = "add-button";
+    productLink.href = `pages/produto.html?slug=${encodeURIComponent(product.id)}`;
+    productLink.append(document.createTextNode("Ver produto "));
     const arrow = document.createElement("span");
     arrow.setAttribute("aria-hidden", "true");
     arrow.textContent = "↗";
-    addButton.append(arrow);
-    addButton.disabled = true;
-    selector.addEventListener("change", () => {
-      const selectedVariation = product.variations.find(
-          variation => variation.id === Number(selector.value)
-      );
-      const canAdd = Boolean(selectedVariation && selectedVariation.estoque > 0);
-      quickAdd.disabled = !canAdd;
-      addButton.disabled = !canAdd;
-      addButton.firstChild.textContent = canAdd ? "Adicionar à sacola " : "Selecione uma variação ";
-    });
-    card.append(imageWrap, details, description, selectorLabel, selector, stockMessage, addButton);
+    productLink.append(arrow);
+    card.append(imageWrap, details, description, productLink);
     return card;
   }
 
@@ -601,8 +485,7 @@
   function orderCartSignature() {
     return cart.map(item => {
       const product = products[item.id];
-      const variation = product?.variations?.find(entry => entry.id === item.variationId)
-          || product?.variations?.[0];
+      const variation = product?.variations?.find(entry => entry.id === item.variationId);
       return `${item.id}:${item.variationId || variation?.id || ""}:${item.quantity}`;
     }).sort().join("|");
   }
@@ -617,8 +500,7 @@
     }
     const itens = cart.map(item => {
       const product = products[item.id];
-      const variation = product?.variations?.find(entry => entry.id === item.variationId)
-          || product?.variations?.[0];
+      const variation = product?.variations?.find(entry => entry.id === item.variationId);
       return variation ? { variacaoId: variation.id, quantidade: item.quantity } : null;
     });
     if (itens.some(item => item === null)) {
@@ -676,5 +558,8 @@
 
   renderCart();
   applyFilters();
+  if (new URLSearchParams(window.location.search).get("abrirSacola") === "1") {
+    openDrawer();
+  }
   loadCatalog();
 })();
