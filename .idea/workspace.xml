@@ -7,14 +7,7 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="fix: add size control option for products and improve image upload validation">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/js/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/js/store.js" afterDir="false" />
-    </list>
+    <list default="true" id="6868d5f4-1871-42a1-872e-ca07681845c4" name="Changes" comment="fix: update product detail links and remove unused toast functionality" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,61 +80,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.4586871011368263" />
-      <entry key="MS500" value="2.958407879675003" />
-      <entry key="S2" value="6.915973675038972" />
-      <entry key="S5" value="12.327382384838128" />
-      <entry key="S10" value="16.133600095893808" />
-      <entry key="S30" value="19.7503084456643" />
-      <entry key="S60" value="20.83330046925744" />
-      <entry key="M2" value="21.40576119125118" />
-      <entry key="M5" value="21.75964156372784" />
-      <entry key="M10" value="21.897830988275366" />
-      <entry key="M15" value="22.18614884606528" />
-      <entry key="M30" value="26.360483037979055" />
-      <entry key="H1" value="44.36147721239604" />
-      <entry key="H2" value="80.68019388875283" />
-      <entry key="H4" value="123.45033109665134" />
-      <entry key="D1" value="189.97925168259238" />
-      <entry key="W1" value="206.12974157734774" />
+      <entry key="MS100" value="1.0001928811796543" />
+      <entry key="MS500" value="1.1815970273699021" />
+      <entry key="S2" value="1.9169457060863033" />
+      <entry key="S5" value="2.726710902721308" />
+      <entry key="S10" value="3.245865571844283" />
+      <entry key="S30" value="3.7161310737702578" />
+      <entry key="S60" value="3.853523031055786" />
+      <entry key="M2" value="3.92558622141892" />
+      <entry key="M5" value="3.9769889753793684" />
+      <entry key="M10" value="4.378854295905663" />
+      <entry key="M15" value="5.5131496803612485" />
+      <entry key="M30" value="10.902010101473023" />
+      <entry key="H1" value="26.705303015561732" />
+      <entry key="H2" value="61.72210980801552" />
+      <entry key="H4" value="108.41959635641874" />
+      <entry key="D1" value="188.7515062101207" />
+      <entry key="W1" value="209.30971164866185" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
-      <entry key="S10" value="4.9838458683539006E-205" />
-      <entry key="S30" value="7.92844962953892E-69" />
-      <entry key="S60" value="8.908344410909187E-35" />
-      <entry key="M2" value="9.703831908587833E-18" />
-      <entry key="M5" value="2.1416363683393487E-7" />
-      <entry key="M10" value="8.153914399489387E-4" />
-      <entry key="M15" value="0.014020740689764437" />
-      <entry key="M30" value="0.2750064956659989" />
-      <entry key="H1" value="1.4430881394309485" />
-      <entry key="H2" value="3.6979666369036486" />
-      <entry key="H4" value="6.2205175617165365" />
-      <entry key="D1" value="9.96048793855208" />
-      <entry key="W1" value="10.843839834548877" />
+      <entry key="S10" value="9.96734603439157E-310" />
+      <entry key="S30" value="9.989105096956993E-104" />
+      <entry key="S60" value="3.1620312283110828E-52" />
+      <entry key="M2" value="1.8282174199884951E-26" />
+      <entry key="M5" value="6.930739319026491E-11" />
+      <entry key="M10" value="1.466841077377568E-5" />
+      <entry key="M15" value="9.626067459990236E-4" />
+      <entry key="M30" value="0.07205795353071769" />
+      <entry key="H1" value="0.7386902098995659" />
+      <entry key="H2" value="2.6457434619750217" />
+      <entry key="H4" value="5.2616128803571725" />
+      <entry key="D1" value="9.686406168011525" />
+      <entry key="W1" value="10.800701418688028" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.4166279743825108" />
-      <entry key="MS500" value="2.9407116619980607" />
-      <entry key="S2" value="6.884513296418313" />
-      <entry key="S5" value="12.263962810874352" />
-      <entry key="S10" value="16.076003397685945" />
-      <entry key="S30" value="19.721500445409347" />
-      <entry key="S60" value="20.817346523230206" />
-      <entry key="M2" value="21.39736517409941" />
-      <entry key="M5" value="21.75617849796283" />
-      <entry key="M10" value="21.896895429028017" />
-      <entry key="M15" value="22.19898192699116" />
-      <entry key="M30" value="26.63472368921993" />
-      <entry key="H1" value="45.803764860435614" />
-      <entry key="H2" value="84.37731145674121" />
-      <entry key="H4" value="129.67014868919398" />
-      <entry key="D1" value="199.93954911275418" />
-      <entry key="W1" value="216.9735515884666" />
+      <entry key="MS100" value="0.9594517261589179" />
+      <entry key="MS500" value="1.172298284415804" />
+      <entry key="S2" value="1.9105321908516613" />
+      <entry key="S5" value="2.7199565020365313" />
+      <entry key="S10" value="3.2408697710729917" />
+      <entry key="S30" value="3.7139414945079703" />
+      <entry key="S60" value="3.8523491750146803" />
+      <entry key="M2" value="3.924978361800795" />
+      <entry key="M5" value="3.976739531096397" />
+      <entry key="M10" value="4.378712427357769" />
+      <entry key="M15" value="5.513947192517885" />
+      <entry key="M30" value="10.973825510842678" />
+      <entry key="H1" value="27.443562506337667" />
+      <entry key="H2" value="64.36723530868281" />
+      <entry key="H4" value="113.6806119239893" />
+      <entry key="D1" value="198.43772623752895" />
+      <entry key="W1" value="220.1103832376405" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -295,7 +288,10 @@
     <MESSAGE value="fix: corrigir funcionalidades do carrossel e melhorar a integração com o catálogo&#10;&#10;- Corrige salvamento de variações de produtos.&#10;- Ajusta notificação de adição à sacola.&#10;- Impede abertura automática da sacola.&#10;- Reorganiza painel administrativo.&#10;- Adiciona indicadores de estoque e pedidos no dashboard.&#10;- Remove acesso a &quot;Meus pedidos&quot; do cabeçalho.&#10;- Preserva autenticação e funcionalidades existentes.&#10;- Atualiza testes automatizados." />
     <MESSAGE value="fix: melhorar validação e upload de imagens de produtos no painel administrativo" />
     <MESSAGE value="fix: add size control option for products and improve image upload validation" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: add size control option for products and improve image upload validation" />
+    <MESSAGE value="fix: corrigir identificacao do autor" />
+    <MESSAGE value="fix: update product detail links and remove unused toast functionality" />
+    <MESSAGE value="Reed.me atualizado" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reed.me atualizado" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
