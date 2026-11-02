@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F3EE">
+  <meta name="description" content="Confira os detalhes, tamanhos, cores e disponibilidade das peças MBV StreetView.">
+  <title>Produto | MBV StreetView</title>
+  <script src="../js/theme.js"></script>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="product-detail-page">
+  <a class="skip-link" href="#productMain">Pular para o conteúdo</a>
+  <div class="store-toast" id="productToast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+  <div class="announcement-bar">
+    <span>MBV STREETVIEW / DROP 01</span>
+    <span>Vista sua identidade. Sem pedir licença.</span>
+    <span>FRETE GRÁTIS ACIMA DE R$ 150</span>
+  </div>
+  <header class="site-nav product-site-nav">
+    <a class="site-brand" href="../index.html" aria-label="MBV StreetView — voltar à loja">
+      <img src="../imagens/Logo_MBV.png" alt="" class="site-logo">
+      <span class="brand-lockup"><strong>MBV</strong><small>STREETVIEW</small></span>
+    </a>
+    <div class="nav-actions product-nav-actions">
+      <a id="openCart" class="cart-trigger" href="../index.html?abrirSacola=1#produtos" aria-label="Abrir sua sacola">
+        Sacola <span class="cart-count" id="productCartCount">0</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="productMain" class="product-detail-shell page-shell">
+    <nav class="product-breadcrumb" aria-label="Trilha de navegação">
+      <a href="../index.html">Início</a><span aria-hidden="true">/</span>
+      <a href="../index.html#produtos">Loja</a><span aria-hidden="true">/</span>
+      <span id="productBreadcrumbName">Produto</span>
+    </nav>
+    <p id="productPageStatus" class="product-page-status" role="status" aria-live="polite">Carregando produto…</p>
+    <section id="productDetails" class="product-detail-grid" aria-labelledby="productName" hidden>
+      <div class="product-detail-image-wrap">
+        <img id="productImage" alt="">
+      </div>
+      <div class="product-detail-info">
+        <p id="productCategory" class="eyebrow"></p>
+        <h1 id="productName"></h1>
+        <p id="productPrice" class="product-detail-price"></p>
+        <p id="productDescription" class="product-detail-description"></p>
+        <p id="productAvailability" class="product-availability" role="status" aria-live="polite"></p>
+
+        <form id="productPurchaseForm" class="product-purchase-form">
+          <div id="productSizeField" class="product-field">
+            <label for="productSize">Tamanho</label>
+            <select id="productSize" required>
+              <option value="">Selecione um tamanho</option>
+            </select>
+          </div>
+          <div class="product-field">
+            <label id="productColorLabel" for="productColor">Cor</label>
+            <select id="productColor" required>
+              <option value="">Selecione uma cor</option>
+            </select>
+          </div>
+          <div class="product-field product-quantity-field">
+            <label for="productQuantity">Quantidade</label>
+            <div class="product-quantity-control">
+              <button id="quantityDecrease" type="button" aria-label="Diminuir quantidade">−</button>
+              <input id="productQuantity" type="number" min="1" max="1" value="1" inputmode="numeric" required>
+              <button id="quantityIncrease" type="button" aria-label="Aumentar quantidade">+</button>
+            </div>
+          </div>
+          <button id="addProductToCart" class="button button-dark product-purchase-button" type="submit" disabled>
+            Adicionar à sacola <span aria-hidden="true">↗</span>
+          </button>
+        </form>
+
+        <p id="productFeedback" class="product-feedback" role="status" aria-live="polite"></p>
+        <a class="product-continue-link" href="../index.html#produtos">Continuar comprando <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer product-detail-footer">
+    <a class="footer-brand" href="../index.html">
+      <img src="../imagens/Logo_MBV.png" alt="">
+      <span>MBV <small>STREETVIEW</small></span>
+    </a>
+    <p>STREETWEAR WITH INTENTION.</p>
+    <small>© 2026 MBV STREETVIEW — TODOS OS DIREITOS RESERVADOS</small>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/product.js"></script>
+</body>
+</html>
